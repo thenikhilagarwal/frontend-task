@@ -2,21 +2,46 @@ import React from 'react';
 import { Home, ChevronRight } from 'lucide-react';
 
 
-export default function Header() {
+export default function Header({ breadcrumbs }) {
+  const items = breadcrumbs || [{ label: 'Campaign' }];
+
   return (
     <header className="h-16 bg-white dark:bg-slate-900 rounded-md flex items-center justify-between px-6 sticky top-0 z-10 transition-colors duration-200 shadow-lg">
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
         <a
           href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            if (items[0] && items[0].onClick) {
+              items[0].onClick();
+            }
+          }}
           className="hover:text-slate-700 dark:hover:text-slate-200 transition-colors p-1 rounded hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
         >
           <Home className="size-4 text-primary" />
         </a>
-        <ChevronRight className='size-4' />
-        <span className="font-medium text-slate-700 dark:text-slate-300">
-          Campaign
-        </span>
+        
+        {items.map((item, index) => (
+          <React.Fragment key={index}>
+            <ChevronRight className="size-4" />
+            {item.onClick ? (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  item.onClick();
+                }}
+                className="font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer bg-transparent border-0 p-0 text-left"
+              >
+                {item.label}
+              </button>
+            ) : (
+              <span className="font-medium text-slate-700 dark:text-slate-300">
+                {item.label}
+              </span>
+            )}
+          </React.Fragment>
+        ))}
       </div>
 
       {/* Profile Info Top-Right */}

@@ -2,74 +2,19 @@ import { useState } from 'react';
 import advance from '../assets/advance.svg';
 import standard from '../assets/standard.svg';
 
-export default function CampaignModal({ isOpen, onClose, onSave }) {
+export default function CampaignModal({ isOpen, onClose, onNext }) {
   const [workflowMode, setWorkflowMode] = useState('advanced');
-
-  const [formData, setFormData] = useState({
-    name: '',
-    channel: 'Email',
-    subject: '',
-    status: 'Active',
-    description: '',
-  });
-
-  const [errors, setErrors] = useState({});
 
   if (!isOpen) return null;
 
   const handleClose = () => {
-    setErrors({});
     onClose();
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = 'Campaign Name is required';
-    if (!formData.subject.trim()) newErrors.subject = 'Subject Line is required';
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    onSave({
-      ...formData,
-      workflowMode,
-      id: Date.now().toString(),
-      createdAt: new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      }),
-      metrics: {
-        sent: Math.floor(Math.random() * 5000) + 1000,
-        openedRate: Math.floor(Math.random() * 40) + 20, // percentage
-        clickedRate: Math.floor(Math.random() * 15) + 5, // percentage
-      }
-    });
-
-    // Reset and close
-    setFormData({
-      name: '',
-      channel: 'Email',
-      subject: '',
-      status: 'Active',
-      description: '',
-    });
-    setErrors({});
-    setStep(1);
-    setWorkflowMode('advanced');
-    onClose();
+  const handleNext = () => {
+    onNext(workflowMode);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
-    }
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -226,7 +171,7 @@ export default function CampaignModal({ isOpen, onClose, onSave }) {
           </button>
           <button
             type="button"
-            onClick={handleClose}
+            onClick={handleNext}
             className="px-6 py-2.5 rounded-sm bg-linear-to-r from-grideant-2 from-30% to-grideant-1 via-100% hover:from-grideant-2 hover:to-grideant-2 text-white text-sm font-medium shadow-md shadow-blue-500/10 hover:shadow-blue-500/20 transition-all cursor-pointer"
           >
             Next
