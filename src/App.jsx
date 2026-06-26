@@ -6,6 +6,7 @@ import CampaignEmptyState from './components/CampaignEmptyState';
 import CampaignModal from './components/CampaignModal';
 import CampaignTable from './components/CampaignTable';
 import CampaignWorkflow from './components/CampaignWorkflow';
+import LookalikeModal from './components/LookalikeModal';
 import { Search, ChevronDown } from 'lucide-react';
 
 export default function App() {
@@ -32,6 +33,11 @@ export default function App() {
   const [statusFilter, setStatusFilter] = useState('All');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // Lookalike modal states
+  const [isLookalikeModalOpen, setIsLookalikeModalOpen] = useState(false);
+  const [lookalikeLists, setLookalikeLists] = useState([]);
+  const [selectedLookalikeListId, setSelectedLookalikeListId] = useState(null);
 
   // Sync theme with DOM
   useEffect(() => {
@@ -124,6 +130,9 @@ export default function App() {
               mode={workflowMode}
               onCancel={handleCancelWorkflow}
               onSave={handleSaveCampaign}
+              lookalikeLists={lookalikeLists}
+              selectedLookalikeListId={selectedLookalikeListId}
+              setIsLookalikeModalOpen={setIsLookalikeModalOpen}
             />
           ) : (
             <>
@@ -230,6 +239,15 @@ export default function App() {
           setIsModalOpen(false);
         }}
       />
+      
+      <LookalikeModal
+          isOpen={isLookalikeModalOpen}
+          onClose={() => setIsLookalikeModalOpen(false)}
+          lists={lookalikeLists}
+          onCreateList={(newList) => setLookalikeLists(prev => [...prev, newList])}
+          selectedListId={selectedLookalikeListId}
+          onSelectConfirm={(id) => setSelectedLookalikeListId(id)}
+        />
     </div>
   );
 }
