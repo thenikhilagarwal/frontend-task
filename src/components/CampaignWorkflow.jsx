@@ -1,21 +1,24 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import LookalikeModal from './LookalikeModal';
 import { 
   ListChecks, 
   User, 
   Settings, 
   BarChart3, 
   ChevronDown, 
+  Info, 
   ChevronUp, 
   FileText, 
   Users, 
   Webhook, 
-  Download, 
+  ChevronRight,
+  Upload, 
   Check, 
   Sparkles, 
   AlertCircle, 
   Copy, 
   ArrowLeft, 
-  ArrowRight 
+  CloudDownload
 } from 'lucide-react';
 
 const Linkedin = (props) => (
@@ -34,7 +37,14 @@ const Linkedin = (props) => (
   </svg>
 );
 
-export default function CampaignWorkflow({ mode, onCancel, onSave }) {
+export default function CampaignWorkflow({ 
+  mode, 
+  onCancel, 
+  onSave,
+  lookalikeLists = [],
+  selectedLookalikeListId = null,
+  setIsLookalikeModalOpen
+}) {
   const [currentStep, setCurrentStep] = useState(1);
   const [importAccordionOpen, setImportAccordionOpen] = useState(true);
   
@@ -151,46 +161,40 @@ export default function CampaignWorkflow({ mode, onCancel, onSave }) {
   };
 
   return (
-    <div className="space-y-6 select-none animate-fade-in pb-10">
+    <div className="space-y-6 select-none animate-fade-in">
       {/* 1. Horizontal Stepper */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-6 py-4 shadow-xs flex flex-wrap items-center justify-between gap-y-4">
+      <div className="bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-md px-6 py-4 shadow-xs flex flex-wrap items-center gap-x-5  xl:gap-x-10 gap-y-4">
         {/* Step 1: Define Target Audience */}
         <div className="flex items-center gap-3">
           <div className={`size-10 rounded-lg flex items-center justify-center transition-all ${
             currentStep === 1 
-              ? 'bg-brand-blue text-white shadow-md shadow-blue-500/20' 
+              ? 'bg-primary text-white shadow-md shadow-blue-500/20' 
               : currentStep > 1 
                 ? 'bg-emerald-500/10 text-emerald-500' 
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
           }`}>
             <ListChecks className="size-5" />
           </div>
-          <div>
-            <div className={`text-xs font-semibold uppercase tracking-wider ${currentStep >= 1 ? 'text-slate-400' : 'text-slate-500'}`}>Step 1</div>
-            <div className={`text-sm font-bold ${currentStep === 1 ? 'text-slate-850 dark:text-slate-100' : 'text-slate-500 dark:text-slate-400'}`}>Define Target Audience</div>
-          </div>
+          <div className={`text-base font-medium ${currentStep === 1 ? 'text-[#444050] dark:text-slate-100' : 'text-[#444050] dark:text-slate-400'}`}>Define Target Audience</div>
         </div>
 
-        <div className="hidden md:block text-slate-300 dark:text-slate-700 font-normal">&gt;</div>
+        <ChevronRight className="size-5 text-[#6E6B7B]" />
 
         {/* Step 2: Sender Profiles */}
         <div className="flex items-center gap-3">
           <div className={`size-10 rounded-lg flex items-center justify-center transition-all ${
             currentStep === 2 
-              ? 'bg-brand-blue text-white shadow-md shadow-blue-500/20' 
+              ? 'bg-primary text-white shadow-md shadow-blue-500/20' 
               : currentStep > 2 
                 ? 'bg-emerald-500/10 text-emerald-500' 
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+                : 'bg-[#E8E8E8] dark:bg-slate-800 text-slate-400'
           }`}>
             <User className="size-5" />
           </div>
-          <div>
-            <div className={`text-xs font-semibold uppercase tracking-wider ${currentStep >= 2 ? 'text-slate-400' : 'text-slate-500'}`}>Step 2</div>
-            <div className={`text-sm font-bold ${currentStep === 2 ? 'text-slate-850 dark:text-slate-100' : 'text-slate-500'}`}>Sender Profiles</div>
-          </div>
+          <div className={`text-base font-medium ${currentStep === 1 ? 'text-[#5E5873] dark:text-slate-100' : 'text-[#444050] dark:text-slate-400'}`}>Sender Profiles</div>
         </div>
 
-        <div className="hidden md:block text-slate-300 dark:text-slate-700 font-normal">&gt;</div>
+        <ChevronRight className="size-5 text-[#6E6B7B]" />
 
         {/* Step 3: Settings */}
         <div className="flex items-center gap-3">
@@ -203,13 +207,10 @@ export default function CampaignWorkflow({ mode, onCancel, onSave }) {
           }`}>
             <Settings className="size-5" />
           </div>
-          <div>
-            <div className={`text-xs font-semibold uppercase tracking-wider ${currentStep >= 3 ? 'text-slate-400' : 'text-slate-500'}`}>Step 3</div>
-            <div className={`text-sm font-bold ${currentStep === 3 ? 'text-slate-850 dark:text-slate-100' : 'text-slate-500'}`}>Settings</div>
-          </div>
+          <div className={`text-base font-medium ${currentStep === 1 ? 'text-[#5E5873] dark:text-slate-100' : 'text-[#444050] dark:text-slate-400'}`}>Settings</div>
         </div>
 
-        <div className="hidden md:block text-slate-300 dark:text-slate-700 font-normal">&gt;</div>
+        <ChevronRight className="size-5 text-[#6E6B7B]" />
 
         {/* Step 4: Stats */}
         <div className="flex items-center gap-3">
@@ -220,220 +221,279 @@ export default function CampaignWorkflow({ mode, onCancel, onSave }) {
           }`}>
             <BarChart3 className="size-5" />
           </div>
-          <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">Step 4</div>
-            <div className={`text-sm font-bold ${currentStep === 4 ? 'text-slate-850 dark:text-slate-100' : 'text-slate-500'}`}>Stats</div>
-          </div>
+          <div className={`text-base font-medium ${currentStep === 1 ? 'text-[#5E5873] dark:text-slate-100' : 'text-slate-500 dark:text-slate-400'}`}>Stats</div>
         </div>
       </div>
 
       {/* 2. Step View Content Container */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-8 shadow-xs min-h-[420px] flex flex-col justify-between">
+      <div className="flex flex-col justify-between">
         
         {/* STEP 1: DEFINE TARGET AUDIENCE */}
         {currentStep === 1 && (
-          <div className="space-y-6">
-            <div className="flex gap-4">
-              {/* Timeline Indicator Column */}
-              <div className="flex flex-col items-center">
-                <div className="size-5 rounded-full border-2 border-brand-blue bg-white dark:bg-slate-900 flex items-center justify-center">
-                  <div className="size-1.5 rounded-full bg-brand-blue"></div>
-                </div>
-                <div className="w-0.5 flex-1 bg-slate-200 dark:bg-slate-800 mt-2"></div>
+          <div className="relative pl-8 space-y-6">
+            {/* Timeline Line */}
+            <div className="absolute left-[9px] top-2 bottom-2 w-0.5 bg-[#EAEFFF] dark:bg-slate-850"></div>
+
+            {/* Sub-step 1: Choose Import Method */}
+            <div className="relative space-y-4">
+              {/* Node 1 */}
+              <div className="absolute -left-8 top-2 size-5 rounded-full bg-emerald-500 flex items-center justify-center text-white z-10">
+                <Check className="size-3 stroke-[3]" />
               </div>
 
-              {/* Accordion Block */}
-              <div className="flex-1 space-y-4">
-                <button 
-                  onClick={() => setImportAccordionOpen(!importAccordionOpen)}
-                  className="w-full flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800/80 text-left font-bold text-slate-800 dark:text-slate-100 hover:text-brand-blue transition-colors cursor-pointer"
-                >
-                  <span className="text-base font-semibold">Choose Import Method</span>
-                  {importAccordionOpen ? <ChevronUp className="size-4 text-slate-500" /> : <ChevronDown className="size-4 text-slate-500" />}
-                </button>
+              {/* Header Bar */}
+              <button 
+                type="button"
+                onClick={() => setImportAccordionOpen(!importAccordionOpen)}
+                className="w-full flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-md text-left font-bold text-slate-800 dark:text-slate-100 hover:text-brand-blue transition-all cursor-pointer"
+              >
+                <span className="text-base font-medium text-[#444050] dark:text-slate-200">Choose Import Method</span>
+                {importAccordionOpen ? <ChevronUp className="size-4 text-slate-500" /> : <ChevronDown className="size-4 text-slate-500" />}
+              </button>
 
-                {importAccordionOpen && (
-                  <div className="space-y-6 pt-2 animate-fade-in">
-                    {/* Horizontal 4 Cards Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                      
-                      {/* Method 1: LinkedIn Search */}
-                      <div 
-                        onClick={() => setSelectedMethod('linkedin')}
-                        className={`p-5 border-2 rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${
-                          selectedMethod === 'linkedin'
-                            ? 'bg-[#F6F8FF] dark:bg-blue-950/20 border-brand-blue shadow-xs'
-                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-850 hover:border-slate-300 dark:hover:border-slate-700'
-                        }`}
-                      >
-                        <div className="space-y-3">
-                          <div className={`size-9 rounded-lg flex items-center justify-center ${selectedMethod === 'linkedin' ? 'bg-brand-blue text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}`}>
+              {/* Cards Content */}
+              {importAccordionOpen && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-4 animate-fade-in">
+                  {/* Method 1: LinkedIn Search */}
+                  <div 
+                    onClick={() => setSelectedMethod('linkedin')}
+                    className={`relative p-5 border rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${
+                      selectedMethod === 'linkedin'
+                        ? 'bg-[#F6F8FF] dark:bg-[#F9FBFF] border-[#3666EE] shadow-xs'
+                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700'
+                    }`}
+                  >
+                    {selectedMethod === 'linkedin' && (
+                      <div className="absolute top-3 right-3 size-5 bg-primary text-white rounded-sm flex items-center justify-center shadow-xs">
+                        <Check className="size-3 stroke-[3]" />
+                      </div>
+                    )}
+                    <div className="space-y-4">
+                      <div className={`size-4 rounded-lg flex items-center justify-center ${selectedMethod === 'linkedin' ? 'bg-[#F6F8FF] text-primary' : 'text-[#5E5873] dark:text-slate-400'}`}>
+                        <Linkedin className="size-4" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-semibold text-[#5E5873] dark:text-slate-200">LinkedIn Search</h4>
+                        <p className="text-xs text-[#5E5873] dark:text-slate-500 font-normal leading-relaxed mt-1">
+                          (Basic, Sales Nav, Post, Group or Event URL)
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Method 2: Upload CSV File */}
+                  <div 
+                    onClick={() => setSelectedMethod('csv')}
+                    className={`relative p-5 border rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${
+                      selectedMethod === 'csv'
+                        ? 'bg-[#F6F8FF] dark:bg-blue-950/20 border-brand-blue shadow-xs'
+                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700'
+                    }`}
+                  >
+                    {selectedMethod === 'csv' && (
+                      <div className="absolute top-3 right-3 size-5 bg-brand-blue text-white rounded-md flex items-center justify-center shadow-xs">
+                        <Check className="size-3 stroke-[3]" />
+                      </div>
+                    )}
+                    <div className="space-y-4">
+                      <div className={`size-4 rounded-lg flex items-center justify-center ${selectedMethod === 'csv' ? 'bg-[#F6F8FF] text-primary' : 'text-[#5E5873] dark:text-slate-400'}`}>
+                        <FileText className="size-4" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-semibold text-[#5E5873] dark:text-slate-200">Upload CSV File</h4>
+                        <p className="text-xs text-[#5E5873] dark:text-slate-500 font-normal leading-relaxed mt-1">
+                          Upload LinkedIn profiles via CSV. <span className="text-brand-blue font-semibold hover:underline">Download Sample</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Method 3: Lookalike Audience */}
+                  <div 
+                    onClick={() => {
+                      setSelectedMethod('list');
+                      setIsLookalikeModalOpen(true);
+                    }}
+                    className={`relative p-5 border rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${
+                      selectedMethod === 'list'
+                        ? 'bg-[#F6F8FF] dark:bg-blue-950/20 border-brand-blue shadow-xs'
+                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700'
+                    }`}
+                  >
+                    {selectedMethod === 'list' && (
+                      <div className="absolute top-3 right-3 size-5 bg-brand-blue text-white rounded-md flex items-center justify-center shadow-xs">
+                        <Check className="size-3 stroke-[3]" />
+                      </div>
+                    )}
+                    <div className="space-y-4">
+                      <div className={`size-4 rounded-lg flex items-center justify-center ${selectedMethod === 'list' ? 'bg-[#F6F8FF] text-primary' : 'text-[#5E5873] dark:text-slate-400'}`}>
+                        <Users className="size-4" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-semibold text-[#5E5873] dark:text-slate-200">Lookalike Audience</h4>
+                        <p className="text-xs text-[#5E5873] dark:text-slate-500 font-normal leading-relaxed mt-1">
+                          Use Lead Finder to find audience.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Method 4: Inbound Webhook */}
+                  <div 
+                    onClick={() => setSelectedMethod('webhook')}
+                    className={`relative p-5 border rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${
+                      selectedMethod === 'webhook'
+                        ? 'bg-[#F6F8FF] dark:bg-blue-950/20 border-brand-blue shadow-xs'
+                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700'
+                    }`}
+                  >
+                    {selectedMethod === 'webhook' && (
+                      <div className="absolute top-3 right-3 size-5 bg-brand-blue text-white rounded-md flex items-center justify-center shadow-xs">
+                        <Check className="size-3 stroke-[3]" />
+                      </div>
+                    )}
+                    <div className="space-y-4">
+                      <div className={`size-4 rounded-lg flex items-center justify-center ${selectedMethod === 'webhook' ? 'bg-[#F6F8FF] text-primary' : 'text-[#5E5873] dark:text-slate-400'}`}>
+                        <Webhook className="size-4" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-semibold text-[#5E5873] dark:text-slate-200">Inbound Webhook</h4>
+                        <p className="text-xs text-[#5E5873] dark:text-slate-500 font-normal leading-relaxed mt-1">
+                          Sync leads from zapier, n8n make in real time
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Sub-step 2: Paste URL / Method Details */}
+            <div className="relative space-y-4">
+
+              {selectedMethod === 'list' ? "" : 
+                <>
+                  {/* Node 2 */}
+                  <div className="absolute -left-8 top-5 size-5 rounded-full border-2 border-primary bg-white dark:bg-slate-900 flex items-center justify-center z-10">
+                    <div className="size-1.5 rounded-full bg-primary"></div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 w-full p-4 bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-md font-bold text-[#444050] dark:text-slate-100">
+                    <span className="text-base font-medium text-[#444050] dark:text-slate-200">
+                      {selectedMethod === 'linkedin' && 'Paste LinkedIn Search URL'}
+                      {selectedMethod === 'csv' && 'Upload CSV File'}
+                      {selectedMethod === 'list' && 'Lookalike Audience Selection'}
+                      {selectedMethod === 'webhook' && 'Inbound Webhook Configuration'}
+                    </span>
+                    {selectedMethod == 'csv' && (
+                      <span className='bg-[#F8F8F8] px-3 py-1 rounded-sm font-semibold text-[#6E6B7B] text-xs'>Step 1 of 2</span>
+                    )}
+                  </div>
+                  </>
+              }
+
+              
+
+              {/* Details Card */}
+              
+                {selectedMethod === 'linkedin' && (
+                  <div className="bg-white dark:bg-slate-900 border border-[#EBE9F1] dark:border-slate-800 rounded-md p-6">
+                    <div className="space-y-5">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div className="flex items-center gap-2.5 text-slate-700 dark:text-slate-350 text-sm">
+                          <div className="size-4 text-primary shrink-0">
                             <Linkedin className="size-4" />
                           </div>
-                          <div>
-                            <h4 className="text-sm font-bold text-slate-800 dark:text-slate-150">LinkedIn Search</h4>
-                            <p className="text-xs text-slate-400 dark:text-slate-500 font-normal leading-relaxed mt-1">
-                              (Basic, Sales Nav, Post, Group or Event URL)
-                            </p>
-                          </div>
+                          <span className="font-normal text-slate-600 dark:text-slate-300">
+                            Find your target audience with{" "}
+                            <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline font-semibold">LinkedIn Search</a> or{" "}
+                            <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline font-semibold">Sales Navigator</a> or{" "}
+                            <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline font-semibold">Post URL</a> or{" "}
+                            <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline font-semibold">Group URL</a>
+                          </span>
                         </div>
+                        <a href="#" onClick={(e) => e.preventDefault()} className="flex items-center gap-1.5 text-xs text-primary hover:text-brand-blue-hover font-medium shrink-0">
+                          <Info className='size-3' />
+                          Search Guide
+                        </a>
                       </div>
 
-                      {/* Method 2: Upload CSV File */}
-                      <div 
-                        onClick={() => setSelectedMethod('csv')}
-                        className={`p-5 border-2 rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${
-                          selectedMethod === 'csv'
-                            ? 'bg-[#F6F8FF] dark:bg-blue-950/20 border-brand-blue shadow-xs'
-                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-850 hover:border-slate-300 dark:hover:border-slate-700'
-                        }`}
-                      >
-                        <div className="space-y-3">
-                          <div className={`size-9 rounded-lg flex items-center justify-center ${selectedMethod === 'csv' ? 'bg-brand-blue text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}`}>
-                            <FileText className="size-4" />
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-bold text-slate-800 dark:text-slate-150">Upload CSV File</h4>
-                            <p className="text-xs text-slate-400 dark:text-slate-500 font-normal leading-relaxed mt-1">
-                              Upload LinkedIn profiles via CSV. <span className="text-brand-blue font-semibold hover:underline">Download Sample</span>
-                            </p>
-                          </div>
-                        </div>
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <input 
+                          type="text" 
+                          placeholder="https://www.linkedin.com/search/results/people/?keywords=" 
+                          value={linkedinUrl}
+                          onChange={(e) => setLinkedinUrl(e.target.value)}
+                          className="flex-1 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue"
+                        />
+                        <button 
+                          type="button"
+                          className="px-6 py-2.5 bg-primary hover:bg-brand-blue-hover text-white rounded-md text-sm font-semibold transition-all cursor-pointer shadow-xs shrink-0"
+                        >
+                          Validate
+                        </button>
                       </div>
 
-                      {/* Method 3: Lead Lists */}
-                      <div 
-                        onClick={() => setSelectedMethod('list')}
-                        className={`p-5 border-2 rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${
-                          selectedMethod === 'list'
-                            ? 'bg-[#F6F8FF] dark:bg-blue-950/20 border-brand-blue shadow-xs'
-                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-850 hover:border-slate-300 dark:hover:border-slate-700'
-                        }`}
-                      >
-                        <div className="space-y-3">
-                          <div className={`size-9 rounded-lg flex items-center justify-center ${selectedMethod === 'list' ? 'bg-brand-blue text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}`}>
-                            <Users className="size-4" />
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-bold text-slate-800 dark:text-slate-150">Lead Lists</h4>
-                            <p className="text-xs text-slate-400 dark:text-slate-500 font-normal leading-relaxed mt-1">
-                              Use Lead Finder to find audience.
-                            </p>
-                          </div>
+                      <div className="flex items-center gap-2 text-xs text-slate-400">
+                        <div className="size-2 rounded-full bg-primary/50 flex items-center justify-center">
+                          <div className="size-1 rounded-full bg-primary"></div>
                         </div>
+                        <span>Paste the search URL directly from Linkedin</span>
                       </div>
-
-                      {/* Method 4: Inbound Webhook */}
-                      <div 
-                        onClick={() => setSelectedMethod('webhook')}
-                        className={`p-5 border-2 rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${
-                          selectedMethod === 'webhook'
-                            ? 'bg-[#F6F8FF] dark:bg-blue-950/20 border-brand-blue shadow-xs'
-                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-850 hover:border-slate-300 dark:hover:border-slate-700'
-                        }`}
-                      >
-                        <div className="space-y-3">
-                          <div className={`size-9 rounded-lg flex items-center justify-center ${selectedMethod === 'webhook' ? 'bg-brand-blue text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}`}>
-                            <Webhook className="size-4" />
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-bold text-slate-800 dark:text-slate-150">Inbound Webhook</h4>
-                            <p className="text-xs text-slate-400 dark:text-slate-500 font-normal leading-relaxed mt-1">
-                              Sync leads from zapier, n8n make in real time
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
-
-                    {/* Method Details Pane */}
-                    <div className="bg-[#F8F9FA] dark:bg-slate-800/40 border border-slate-150 dark:border-slate-800/80 rounded-xl p-5 mt-4 space-y-4">
-                      {selectedMethod === 'linkedin' && (
-                        <div className="space-y-3">
-                          <h5 className="text-sm font-bold text-slate-800 dark:text-slate-150">Enter LinkedIn Search URL</h5>
-                          <p className="text-xs text-slate-400 dark:text-slate-500 leading-normal">
-                            Paste your LinkedIn Search result URL (supports Sales Navigator Search, Basic Search, Post Likers URL, or Event Attendees URL).
-                          </p>
-                          <input 
-                            type="text" 
-                            placeholder="https://www.linkedin.com/sales/search/people?query=..." 
-                            value={linkedinUrl}
-                            onChange={(e) => setLinkedinUrl(e.target.value)}
-                            className="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue"
-                          />
-                        </div>
-                      )}
-
-                      {selectedMethod === 'csv' && (
-                        <div className="space-y-3">
-                          <h5 className="text-sm font-bold text-slate-800 dark:text-slate-150 font-semibold">Upload CSV File</h5>
-                          <p className="text-xs text-slate-400 dark:text-slate-500">
-                            Upload a spreadsheet containing a column labeled <code className="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded font-mono text-[11px] text-brand-blue">profileUrl</code> or <code className="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded font-mono text-[11px] text-brand-blue">linkedinUrl</code>.
-                          </p>
-                          <div className="border-2 border-dashed border-slate-200 dark:border-slate-700/60 rounded-xl p-8 text-center bg-white dark:bg-slate-900 hover:border-brand-blue/50 transition-colors flex flex-col items-center justify-center gap-3 cursor-pointer">
-                            <Download className="size-7 text-slate-300 dark:text-slate-650" />
-                            <div className="text-xs font-semibold text-slate-600 dark:text-slate-400">
-                              {csvFile ? csvFile.name : "Drag & drop files or Browse"}
-                            </div>
-                            <div className="text-[10px] text-slate-400">Supported formats: .csv (Max 15MB)</div>
-                            <input 
-                              type="file" 
-                              accept=".csv"
-                              onChange={(e) => setCsvFile(e.target.files[0])}
-                              className="hidden" 
-                              id="csv-upload-field"
-                            />
-                            <label htmlFor="csv-upload-field" className="px-4 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition-colors">
-                              Select File
-                            </label>
-                          </div>
-                        </div>
-                      )}
-
-                      {selectedMethod === 'list' && (
-                        <div className="space-y-3">
-                          <h5 className="text-sm font-bold text-slate-800 dark:text-slate-150">Select Lead List</h5>
-                          <p className="text-xs text-slate-400 dark:text-slate-500">
-                            Select one of your pre-defined contact lists from your system folders.
-                          </p>
-                          <select 
-                            value={leadList} 
-                            onChange={(e) => setLeadList(e.target.value)}
-                            className="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue"
-                          >
-                            <option value="My Warm Leads">My Warm Leads (240 prospects)</option>
-                            <option value="SaaS Founders Q2">SaaS Founders Q2 (1,248 prospects)</option>
-                            <option value="Angel Investors list">Angel Investors list (87 prospects)</option>
-                            <option value="Cold Outbound List 5">Cold Outbound List 5 (3,000 prospects)</option>
-                          </select>
-                        </div>
-                      )}
-
-                      {selectedMethod === 'webhook' && (
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-between">
-                            <h5 className="text-sm font-bold text-slate-800 dark:text-slate-150">Inbound Webhook Url</h5>
-                            <button 
-                              onClick={copyWebhookUrl}
-                              className="flex items-center gap-1 text-xs text-brand-blue hover:text-brand-blue-hover font-semibold cursor-pointer"
-                            >
-                              <Copy className="size-3.5" />
-                              Copy URL
-                            </button>
-                          </div>
-                          <p className="text-xs text-slate-400 dark:text-slate-500 leading-normal">
-                            Send JSON payloads to this address. Ensure you specify fields such as <code className="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded font-mono text-[11px] text-brand-blue">email</code> and <code className="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded font-mono text-[11px] text-brand-blue">linkedinUrl</code>.
-                          </p>
-                          <div className="font-mono text-xs p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-slate-500 dark:text-slate-400 break-all select-all select-none">
-                            https://api.frontendtask.com/v1/webhooks/inbound/usr_9837a2810
-                          </div>
-                        </div>
-                      )}
                     </div>
                   </div>
                 )}
-              </div>
+
+                {selectedMethod === 'csv' && (
+                  <div className="space-y-4">
+                    <div className="border border-dashed border-primary dark:border-slate-700/60 rounded-sm p-8 text-center bg-[#F8FAFF] dark:bg-slate-900 hover:border-primary/50 transition-colors flex flex-col items-center justify-center gap-2 cursor-pointer">
+                    <span className='flex justify-center items-center gap-1 size-12 bg-[#EAEFFF] rounded-md'>
+                      <Upload className="size-8 text-primary dark:text-slate-650" />
+                    </span>
+                      <div className="text-sm font-medium text-primary dark:text-slate-400">
+                        {csvFile ? csvFile.name : "Drag a File or click a browse"}
+                      </div>
+                      <div className="text-xs text-[#5E5873]">File with up to 100 rows works best</div>
+                      <input 
+                        type="file" 
+                        accept=".csv"
+                        onChange={(e) => setCsvFile(e.target.files[0])}
+                        className="hidden" 
+                        id="csv-upload-field"
+                      />
+                      <label htmlFor="csv-upload-field" className="px-4 py-1.5 bg-[#EAEFFF] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition-colors">
+                        Select File
+                      </label>
+                    </div>
+                    <div className='flex items-center gap-2 text-sm text-[#5E5873] dark:text-slate-500 cursor-pointer'>
+                      <CloudDownload className='text-primary'/> Download a sample file
+                    </div>
+                  </div>
+                )}
+
+
+                {selectedMethod === 'webhook' && (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <h5 className="text-sm font-bold text-[#444050] dark:text-slate-200">Inbound Webhook Url</h5>
+                        <p className="text-xs text-slate-400 dark:text-slate-500 leading-normal">
+                          Send JSON payloads to this address. Ensure you specify fields such as <code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded font-mono text-[11px] text-brand-blue">email</code> and <code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded font-mono text-[11px] text-brand-blue">linkedinUrl</code>.
+                        </p>
+                      </div>
+                      <button 
+                        onClick={copyWebhookUrl}
+                        className="flex items-center gap-1 text-xs text-brand-blue hover:text-brand-blue-hover font-semibold cursor-pointer shrink-0"
+                      >
+                        <Copy className="size-3.5" />
+                        Copy URL
+                      </button>
+                    </div>
+                    <div className="font-mono text-xs p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-md text-slate-600 dark:text-slate-400 break-all select-all">
+                      https://api.frontendtask.com/v1/webhooks/inbound/usr_9837a2810
+                    </div>
+                  </div>
+                )}
+              
             </div>
           </div>
         )}
@@ -776,15 +836,15 @@ export default function CampaignWorkflow({ mode, onCancel, onSave }) {
         )}
 
         {/* footer action buttons */}
-        <div className="flex items-center justify-between pt-6 border-t border-slate-100 dark:border-slate-800/80 mt-6">
-          <button
+        <div className="flex items-center justify-end gap-4 mt-10">
+          {currentStep === 1 ? '' :  <button
             type="button"
             onClick={handleBackStep}
             className="flex items-center gap-2 px-5 py-2.5 rounded-sm bg-slate-100 hover:bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-750 text-sm font-semibold transition-all cursor-pointer"
           >
             <ArrowLeft className="size-4" />
-            <span>{currentStep === 1 ? 'Cancel' : 'Back'}</span>
-          </button>
+            <span>Back</span>
+          </button>}
           
           <button
             type="button"
@@ -792,9 +852,10 @@ export default function CampaignWorkflow({ mode, onCancel, onSave }) {
             className="flex items-center gap-2 px-6 py-2.5 rounded-sm bg-linear-to-r from-grideant-2 from-30% to-grideant-1 via-100% hover:from-grideant-2 hover:to-grideant-2 text-white text-sm font-semibold shadow-md shadow-blue-500/10 hover:shadow-blue-500/20 transition-all cursor-pointer"
           >
             <span>{currentStep === 4 ? 'Launch Campaign' : 'Next'}</span>
-            <ArrowRight className="size-4" />
           </button>
         </div>
+
+        
 
       </div>
     </div>
