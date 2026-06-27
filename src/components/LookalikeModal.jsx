@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Users, Plus, Check } from 'lucide-react';
+import { X, Users, List, Check } from 'lucide-react';
 
 export default function LookalikeModal({ isOpen, onClose, lists, onCreateList, selectedListId, onSelectConfirm }) {
   const [isCreating, setIsCreating] = useState(false);
@@ -11,7 +11,7 @@ export default function LookalikeModal({ isOpen, onClose, lists, onCreateList, s
   const handleCreateSubmit = (e) => {
     e.preventDefault();
     if (!newListName.trim()) return;
-    
+
     // Create new list object
     const newList = {
       id: 'list-' + Date.now(),
@@ -33,14 +33,14 @@ export default function LookalikeModal({ isOpen, onClose, lists, onCreateList, s
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div 
+      <div
         className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity duration-300"
         onClick={onClose}
       ></div>
 
       {/* Modal Container */}
       <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-md w-full max-w-2xl shadow-2xl relative z-10 overflow-hidden transform scale-100 transition-all duration-300 max-h-[95vh] flex flex-col">
-        
+
         {/* Header */}
         <div className="flex items-center justify-between p-6 pb-4 bg-[#F8F8F8] dark:bg-slate-900">
           <div>
@@ -51,7 +51,7 @@ export default function LookalikeModal({ isOpen, onClose, lists, onCreateList, s
               Select a lookalike list for this campaign
             </p>
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="transition-all cursor-pointer"
             aria-label="Close modal"
@@ -65,43 +65,44 @@ export default function LookalikeModal({ isOpen, onClose, lists, onCreateList, s
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 flex flex-col p-8 justify-center min-h-[300px]">
-          {isCreating ? (
-            /* Creation Form */
-            <form onSubmit={handleCreateSubmit} className="space-y-6 w-full max-w-md mx-auto py-4">
-              <div>
-                <label className="block text-sm font-bold text-slate-700 dark:text-slate-355 mb-2">
-                  List Name
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. US Tech Founders"
-                  value={newListName}
-                  onChange={(e) => setNewListName(e.target.value)}
-                  className="w-full px-4 py-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-slate-800 dark:text-slate-150 focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue"
-                  autoFocus
-                />
-              </div>
 
-              <div className="flex items-center justify-end gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setIsCreating(false)}
-                  className="px-5 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 dark:bg-slate-800 dark:hover:bg-slate-750 dark:text-slate-300 text-sm font-semibold transition-colors cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-6 py-2.5 rounded-lg bg-[#4E61EC] hover:bg-[#3D50DB] text-white text-sm font-semibold shadow-md shadow-blue-500/10 transition-all cursor-pointer"
-                >
-                  Create & Select
-                </button>
-              </div>
-            </form>
-          ) : lists.length === 0 ? (
-            /* Empty State matching Design Mockup */
+        {isCreating ? (
+          /* Creation Form */
+          <form onSubmit={handleCreateSubmit}>
+            <div class="flex-1 flex flex-col p-8 justify-center min-h-47">
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-355 mb-2">
+                List Name
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. US Tech Founders"
+                value={newListName}
+                onChange={(e) => setNewListName(e.target.value)}
+                className="w-full px-4 py-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-slate-800 dark:text-slate-150 focus:outline-none focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue"
+                autoFocus
+              />
+            </div>
+
+            <div className="flex items-center justify-end gap-3 p-6 border-t border-slate-100 dark:border-slate-800 mt-6">
+              <button
+                type="button"
+                onClick={() => setIsCreating(false)}
+                className="px-5 py-2.5 rounded-sm bg-slate-100 hover:bg-slate-200 text-slate-600 dark:bg-slate-800 dark:hover:bg-slate-750 dark:text-slate-300 text-sm font-medium transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-6 py-2.5 rounded-sm bg-linear-to-r from-grideant-2 from-30% to-grideant-1 via-100% hover:from-grideant-2 hover:to-grideant-2 text-white text-sm font-medium transition-all cursor-pointer"
+              >
+                Create & Select
+              </button>
+            </div>
+          </form>
+        ) : lists.length === 0 ? (
+          /* Empty State matching Design Mockup */
+          <div className="flex-1 flex flex-col p-8 justify-center min-h-[300px]">
             <div className="flex flex-col items-center justify-center text-center py-6 select-none animate-fade-in">
               <h4 className="text-2xl font-bold text-[#5E5873] dark:text-slate-200">
                 You don't have any leads
@@ -109,8 +110,8 @@ export default function LookalikeModal({ isOpen, onClose, lists, onCreateList, s
               <p className="text-[#5E5873] dark:text-slate-400 text-sm mt-2 font-normal leading-relaxed">
                 Create a lead list to start running campaigns
               </p>
-              
-              <button 
+
+              <button
                 type="button"
                 onClick={() => setIsCreating(true)}
                 className="mt-7 px-7 py-3 bg-linear-to-r from-grideant-2 from-30% to-grideant-1 via-100% hover:from-grideant-2 hover:to-grideant-2 text-white text-sm font-medium rounded-sm cursor-pointer"
@@ -118,69 +119,67 @@ export default function LookalikeModal({ isOpen, onClose, lists, onCreateList, s
                 Create a List
               </button>
             </div>
-          ) : (
-            /* List Selection View */
+          </div>
+        ) : (
+          /* List Selection View */
+          <div className="flex-1 flex flex-col justify-center min-h-[300px]">
             <div className="flex-1 flex flex-col justify-between">
-              <div className="space-y-4 max-h-[260px] overflow-y-auto pr-1">
-                <div className="flex items-center justify-between pb-2">
-                  <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                    Available Lead Lists ({lists.length})
-                  </span>
+              <div class="p-8">
+                <div className="space-y-4 max-h-[260px] overflow-y-auto pr-1">
+                  <div className="space-y-2.5">
+                    {lists.map((list) => {
+                      const isSelected = localSelectedId === list.id;
+                      return (
+                        <div
+                          key={list.id}
+                          onClick={() => setLocalSelectedId(list.id)}
+                          className={`flex items-center justify-between p-4 rounded-md border cursor-pointer transition-all duration-200 ${isSelected
+                            ? 'bg-[#F8FAFF] dark:bg-blue-950/20 border-[#D0DCFF] shadow-xs'
+                            : 'bg-[#F8FAFF] dark:bg-slate-900 border-[#D0DCFF] dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-750'
+                            }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <div>
+                              <List className="size-5" />
+                            </div>
+                            <div className='flex flex-wrap items-center gap-2'>
+                              <span className="font-semibold text-sm text-[#444050] dark:text-slate-200">
+                                {list.name}
+                              </span>
+                              <span className="text-xs text-[#444050] dark:text-slate-500 font-normal">
+                                ({list.leadsCount} Users in the List)
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Radio Selector */}
+                          <div className={`size-5 rounded-xs border-2 flex items-center justify-center transition-all ${isSelected ? 'border-primary bg-primary text-white' : 'border-[#F8FAFF] dark:border-slate-700 bg-transparent'
+                            }`}>
+                            {isSelected && <Check className="size-3 stroke-[3]" />}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end mt-2">
                   <button
                     type="button"
                     onClick={() => setIsCreating(true)}
-                    className="flex items-center gap-1 text-xs font-semibold text-brand-blue hover:text-brand-blue-hover transition-colors cursor-pointer"
+                    className="flex items-center gap-1 text-sm font-medium text-primary transition-colors cursor-pointer"
                   >
-                    <Plus className="size-3.5" />
-                    Create New
+                    Add New
                   </button>
-                </div>
-                
-                <div className="space-y-2.5">
-                  {lists.map((list) => {
-                    const isSelected = localSelectedId === list.id;
-                    return (
-                      <div
-                        key={list.id}
-                        onClick={() => setLocalSelectedId(list.id)}
-                        className={`flex items-center justify-between p-4 rounded-xl border cursor-pointer transition-all duration-200 ${
-                          isSelected
-                            ? 'bg-[#F6F8FF] dark:bg-blue-950/20 border-[#CFDAFE] shadow-xs'
-                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-750'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className={`p-2 rounded-lg ${isSelected ? 'bg-white dark:bg-slate-950 text-brand-blue' : 'bg-slate-50 dark:bg-slate-950 text-slate-400'}`}>
-                            <Users className="size-4" />
-                          </div>
-                          <div>
-                            <span className="font-semibold text-sm text-[#444050] dark:text-slate-200 block">
-                              {list.name}
-                            </span>
-                            <span className="text-xs text-slate-400 dark:text-slate-500 font-normal">
-                              {list.leadsCount} leads
-                            </span>
-                          </div>
-                        </div>
-                        
-                        {/* Radio Selector */}
-                        <div className={`size-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                          isSelected ? 'border-brand-blue bg-brand-blue text-white' : 'border-slate-300 dark:border-slate-700 bg-transparent'
-                        }`}>
-                          {isSelected && <Check className="size-3 stroke-[3]" />}
-                        </div>
-                      </div>
-                    );
-                  })}
                 </div>
               </div>
 
               {/* Selection Confirmation Footer */}
-              <div className="flex items-center justify-end gap-3 pt-6 border-t border-slate-100 dark:border-slate-800 mt-6">
+              <div className="flex items-center justify-end gap-3 p-6 border-t border-slate-100 dark:border-slate-800 mt-6">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-5 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 dark:bg-slate-800 dark:hover:bg-slate-750 dark:text-slate-355 text-sm font-semibold transition-colors cursor-pointer"
+                  className="px-5 py-2.5 rounded-md bg-[#E8E8E8] hover:bg-slate-200 text-[#9692A4] dark:bg-slate-800 dark:hover:bg-slate-750 dark:text-slate-355 text-sm font-medium transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -188,18 +187,18 @@ export default function LookalikeModal({ isOpen, onClose, lists, onCreateList, s
                   type="button"
                   onClick={handleConfirm}
                   disabled={!localSelectedId}
-                  className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all cursor-pointer shadow-md shadow-blue-500/10 ${
-                    localSelectedId
-                      ? 'bg-[#4E61EC] hover:bg-[#3D50DB] text-white hover:shadow-blue-500/20'
-                      : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-600 cursor-not-allowed shadow-none'
-                  }`}
+                  className={`px-6 py-2.5 rounded-md text-sm font-medium transition-all cursor-pointer shadow-md shadow-blue-500/10 ${localSelectedId
+                    ? 'bg-linear-to-r from-grideant-2 from-30% to-grideant-1 via-100% hover:from-grideant-2 hover:to-grideant-2 text-white hover:shadow-blue-500/20'
+                    : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-600 cursor-not-allowed shadow-none'
+                    }`}
                 >
-                  Confirm Selection
+                  Select List
                 </button>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
       </div>
     </div>
   );

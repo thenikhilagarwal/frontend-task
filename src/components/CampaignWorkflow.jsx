@@ -1,23 +1,23 @@
 import { useState } from 'react';
 import LookalikeModal from './LookalikeModal';
-import { 
-  ListChecks, 
-  User, 
-  Settings, 
-  BarChart3, 
-  ChevronDown, 
-  Info, 
-  ChevronUp, 
-  FileText, 
-  Users, 
-  Webhook, 
+import {
+  ListChecks,
+  User,
+  Settings,
+  BarChart3,
+  ChevronDown,
+  Info,
+  ChevronUp,
+  FileText,
+  Users,
+  Webhook,
   ChevronRight,
-  Upload, 
-  Check, 
-  Sparkles, 
-  AlertCircle, 
-  Copy, 
-  ArrowLeft, 
+  Upload,
+  Check,
+  Sparkles,
+  AlertCircle,
+  Copy,
+  ArrowLeft,
   CloudDownload
 } from 'lucide-react';
 
@@ -37,9 +37,9 @@ const Linkedin = (props) => (
   </svg>
 );
 
-export default function CampaignWorkflow({ 
-  mode, 
-  onCancel, 
+export default function CampaignWorkflow({
+  mode,
+  onCancel,
   onSave,
   lookalikeLists = [],
   selectedLookalikeListId = null,
@@ -47,13 +47,13 @@ export default function CampaignWorkflow({
 }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [importAccordionOpen, setImportAccordionOpen] = useState(true);
-  
+
   // Form/State values
   const [selectedMethod, setSelectedMethod] = useState('linkedin');
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [csvFile, setCsvFile] = useState(null);
   const [leadList, setLeadList] = useState('My Warm Leads');
-  
+
   // Step 2: Sender Profiles State
   const [selectedSender, setSelectedSender] = useState('sender-1');
   const senderProfiles = [
@@ -118,7 +118,7 @@ export default function CampaignWorkflow({
       const newErrors = {};
       if (!campaignDetails.name.trim()) newErrors.name = 'Campaign Name is required';
       if (!campaignDetails.subject.trim()) newErrors.subject = 'Subject Line is required';
-      
+
       if (Object.keys(newErrors).length > 0) {
         setErrors(newErrors);
         return;
@@ -166,13 +166,12 @@ export default function CampaignWorkflow({
       <div className="bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-md px-6 py-4 shadow-xs flex flex-wrap items-center gap-x-5  xl:gap-x-10 gap-y-4">
         {/* Step 1: Define Target Audience */}
         <div className="flex items-center gap-3">
-          <div className={`size-10 rounded-lg flex items-center justify-center transition-all ${
-            currentStep === 1 
-              ? 'bg-primary text-white shadow-md shadow-blue-500/20' 
-              : currentStep > 1 
-                ? 'bg-emerald-500/10 text-emerald-500' 
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
-          }`}>
+          <div className={`size-10 rounded-lg flex items-center justify-center transition-all ${currentStep === 1
+            ? 'bg-primary text-white shadow-md shadow-blue-500/20'
+            : currentStep > 1
+              ? 'bg-[#D0DCFF] text-primary'
+              : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+            }`}>
             <ListChecks className="size-5" />
           </div>
           <div className={`text-base font-medium ${currentStep === 1 ? 'text-[#444050] dark:text-slate-100' : 'text-[#444050] dark:text-slate-400'}`}>Define Target Audience</div>
@@ -182,13 +181,12 @@ export default function CampaignWorkflow({
 
         {/* Step 2: Sender Profiles */}
         <div className="flex items-center gap-3">
-          <div className={`size-10 rounded-lg flex items-center justify-center transition-all ${
-            currentStep === 2 
-              ? 'bg-primary text-white shadow-md shadow-blue-500/20' 
-              : currentStep > 2 
-                ? 'bg-emerald-500/10 text-emerald-500' 
-                : 'bg-[#E8E8E8] dark:bg-slate-800 text-slate-400'
-          }`}>
+          <div className={`size-10 rounded-lg flex items-center justify-center transition-all ${currentStep === 2
+            ? 'bg-primary text-white shadow-md shadow-blue-500/20'
+            : currentStep > 2
+              ? 'bg-emerald-500/10 text-emerald-500'
+              : 'bg-[#E8E8E8] dark:bg-slate-800 text-slate-400'
+            }`}>
             <User className="size-5" />
           </div>
           <div className={`text-base font-medium ${currentStep === 1 ? 'text-[#5E5873] dark:text-slate-100' : 'text-[#444050] dark:text-slate-400'}`}>Sender Profiles</div>
@@ -198,13 +196,12 @@ export default function CampaignWorkflow({
 
         {/* Step 3: Settings */}
         <div className="flex items-center gap-3">
-          <div className={`size-10 rounded-lg flex items-center justify-center transition-all ${
-            currentStep === 3 
-              ? 'bg-brand-blue text-white shadow-md shadow-blue-500/20' 
-              : currentStep > 3 
-                ? 'bg-emerald-500/10 text-emerald-500' 
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
-          }`}>
+          <div className={`size-10 rounded-lg flex items-center justify-center transition-all ${currentStep === 3
+            ? 'bg-brand-blue text-white shadow-md shadow-blue-500/20'
+            : currentStep > 3
+              ? 'bg-emerald-500/10 text-emerald-500'
+              : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+            }`}>
             <Settings className="size-5" />
           </div>
           <div className={`text-base font-medium ${currentStep === 1 ? 'text-[#5E5873] dark:text-slate-100' : 'text-[#444050] dark:text-slate-400'}`}>Settings</div>
@@ -214,11 +211,10 @@ export default function CampaignWorkflow({
 
         {/* Step 4: Stats */}
         <div className="flex items-center gap-3">
-          <div className={`size-10 rounded-lg flex items-center justify-center transition-all ${
-            currentStep === 4 
-              ? 'bg-brand-blue text-white shadow-md shadow-blue-500/20' 
-              : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
-          }`}>
+          <div className={`size-10 rounded-lg flex items-center justify-center transition-all ${currentStep === 4
+            ? 'bg-brand-blue text-white shadow-md shadow-blue-500/20'
+            : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+            }`}>
             <BarChart3 className="size-5" />
           </div>
           <div className={`text-base font-medium ${currentStep === 1 ? 'text-[#5E5873] dark:text-slate-100' : 'text-slate-500 dark:text-slate-400'}`}>Stats</div>
@@ -227,7 +223,7 @@ export default function CampaignWorkflow({
 
       {/* 2. Step View Content Container */}
       <div className="flex flex-col justify-between">
-        
+
         {/* STEP 1: DEFINE TARGET AUDIENCE */}
         {currentStep === 1 && (
           <div className="relative pl-8 space-y-6">
@@ -242,7 +238,7 @@ export default function CampaignWorkflow({
               </div>
 
               {/* Header Bar */}
-              <button 
+              <button
                 type="button"
                 onClick={() => setImportAccordionOpen(!importAccordionOpen)}
                 className="w-full flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-md text-left font-bold text-slate-800 dark:text-slate-100 hover:text-brand-blue transition-all cursor-pointer"
@@ -255,13 +251,12 @@ export default function CampaignWorkflow({
               {importAccordionOpen && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-4 animate-fade-in">
                   {/* Method 1: LinkedIn Search */}
-                  <div 
+                  <div
                     onClick={() => setSelectedMethod('linkedin')}
-                    className={`relative p-5 border rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${
-                      selectedMethod === 'linkedin'
-                        ? 'bg-[#F6F8FF] dark:bg-[#F9FBFF] border-[#3666EE] shadow-xs'
-                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700'
-                    }`}
+                    className={`relative p-5 border rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${selectedMethod === 'linkedin'
+                      ? 'bg-[#F6F8FF] dark:bg-[#F9FBFF] border-[#3666EE] shadow-xs'
+                      : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700'
+                      }`}
                   >
                     {selectedMethod === 'linkedin' && (
                       <div className="absolute top-3 right-3 size-5 bg-primary text-white rounded-sm flex items-center justify-center shadow-xs">
@@ -282,13 +277,12 @@ export default function CampaignWorkflow({
                   </div>
 
                   {/* Method 2: Upload CSV File */}
-                  <div 
+                  <div
                     onClick={() => setSelectedMethod('csv')}
-                    className={`relative p-5 border rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${
-                      selectedMethod === 'csv'
-                        ? 'bg-[#F6F8FF] dark:bg-blue-950/20 border-brand-blue shadow-xs'
-                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700'
-                    }`}
+                    className={`relative p-5 border rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${selectedMethod === 'csv'
+                      ? 'bg-[#F6F8FF] dark:bg-blue-950/20 border-brand-blue shadow-xs'
+                      : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700'
+                      }`}
                   >
                     {selectedMethod === 'csv' && (
                       <div className="absolute top-3 right-3 size-5 bg-brand-blue text-white rounded-md flex items-center justify-center shadow-xs">
@@ -309,16 +303,15 @@ export default function CampaignWorkflow({
                   </div>
 
                   {/* Method 3: Lookalike Audience */}
-                  <div 
+                  <div
                     onClick={() => {
                       setSelectedMethod('list');
                       setIsLookalikeModalOpen(true);
                     }}
-                    className={`relative p-5 border rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${
-                      selectedMethod === 'list'
-                        ? 'bg-[#F6F8FF] dark:bg-blue-950/20 border-brand-blue shadow-xs'
-                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700'
-                    }`}
+                    className={`relative p-5 border rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${selectedMethod === 'list'
+                      ? 'bg-[#F6F8FF] dark:bg-blue-950/20 border-brand-blue shadow-xs'
+                      : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700'
+                      }`}
                   >
                     {selectedMethod === 'list' && (
                       <div className="absolute top-3 right-3 size-5 bg-brand-blue text-white rounded-md flex items-center justify-center shadow-xs">
@@ -339,13 +332,12 @@ export default function CampaignWorkflow({
                   </div>
 
                   {/* Method 4: Inbound Webhook */}
-                  <div 
+                  <div
                     onClick={() => setSelectedMethod('webhook')}
-                    className={`relative p-5 border rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${
-                      selectedMethod === 'webhook'
-                        ? 'bg-[#F6F8FF] dark:bg-blue-950/20 border-brand-blue shadow-xs'
-                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700'
-                    }`}
+                    className={`relative p-5 border rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${selectedMethod === 'webhook'
+                      ? 'bg-[#F6F8FF] dark:bg-blue-950/20 border-brand-blue shadow-xs'
+                      : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700'
+                      }`}
                   >
                     {selectedMethod === 'webhook' && (
                       <div className="absolute top-3 right-3 size-5 bg-brand-blue text-white rounded-md flex items-center justify-center shadow-xs">
@@ -371,7 +363,7 @@ export default function CampaignWorkflow({
             {/* Sub-step 2: Paste URL / Method Details */}
             <div className="relative space-y-4">
 
-              {selectedMethod === 'list' ? "" : 
+              {selectedMethod === 'list' ? "" :
                 <>
                   {/* Node 2 */}
                   <div className="absolute -left-8 top-5 size-5 rounded-full border-2 border-primary bg-white dark:bg-slate-900 flex items-center justify-center z-10">
@@ -388,112 +380,112 @@ export default function CampaignWorkflow({
                       <span className='bg-[#F8F8F8] px-3 py-1 rounded-sm font-semibold text-[#6E6B7B] text-xs'>Step 1 of 2</span>
                     )}
                   </div>
-                  </>
+                </>
               }
 
-              
+
 
               {/* Details Card */}
-              
-                {selectedMethod === 'linkedin' && (
-                  <div className="bg-white dark:bg-slate-900 border border-[#EBE9F1] dark:border-slate-800 rounded-md p-6">
-                    <div className="space-y-5">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div className="flex items-center gap-2.5 text-slate-700 dark:text-slate-350 text-sm">
-                          <div className="size-4 text-primary shrink-0">
-                            <Linkedin className="size-4" />
-                          </div>
-                          <span className="font-normal text-slate-600 dark:text-slate-300">
-                            Find your target audience with{" "}
-                            <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline font-semibold">LinkedIn Search</a> or{" "}
-                            <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline font-semibold">Sales Navigator</a> or{" "}
-                            <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline font-semibold">Post URL</a> or{" "}
-                            <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline font-semibold">Group URL</a>
-                          </span>
-                        </div>
-                        <a href="#" onClick={(e) => e.preventDefault()} className="flex items-center gap-1.5 text-xs text-primary hover:text-brand-blue-hover font-medium shrink-0">
-                          <Info className='size-3' />
-                          Search Guide
-                        </a>
-                      </div>
 
-                      <div className="flex flex-col sm:flex-row gap-3">
-                        <input 
-                          type="text" 
-                          placeholder="https://www.linkedin.com/search/results/people/?keywords=" 
-                          value={linkedinUrl}
-                          onChange={(e) => setLinkedinUrl(e.target.value)}
-                          className="flex-1 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue"
-                        />
-                        <button 
-                          type="button"
-                          className="px-6 py-2.5 bg-primary hover:bg-brand-blue-hover text-white rounded-md text-sm font-semibold transition-all cursor-pointer shadow-xs shrink-0"
-                        >
-                          Validate
-                        </button>
-                      </div>
-
-                      <div className="flex items-center gap-2 text-xs text-slate-400">
-                        <div className="size-2 rounded-full bg-primary/50 flex items-center justify-center">
-                          <div className="size-1 rounded-full bg-primary"></div>
+              {selectedMethod === 'linkedin' && (
+                <div className="bg-white dark:bg-slate-900 border border-[#EBE9F1] dark:border-slate-800 rounded-md p-6">
+                  <div className="space-y-5">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="flex items-center gap-2.5 text-slate-700 dark:text-slate-350 text-sm">
+                        <div className="size-4 text-primary shrink-0">
+                          <Linkedin className="size-4" />
                         </div>
-                        <span>Paste the search URL directly from Linkedin</span>
+                        <span className="font-normal text-slate-600 dark:text-slate-300">
+                          Find your target audience with{" "}
+                          <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline font-semibold">LinkedIn Search</a> or{" "}
+                          <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline font-semibold">Sales Navigator</a> or{" "}
+                          <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline font-semibold">Post URL</a> or{" "}
+                          <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline font-semibold">Group URL</a>
+                        </span>
                       </div>
+                      <a href="#" onClick={(e) => e.preventDefault()} className="flex items-center gap-1.5 text-xs text-primary hover:text-brand-blue-hover font-medium shrink-0">
+                        <Info className='size-3' />
+                        Search Guide
+                      </a>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <input
+                        type="text"
+                        placeholder="https://www.linkedin.com/search/results/people/?keywords="
+                        value={linkedinUrl}
+                        onChange={(e) => setLinkedinUrl(e.target.value)}
+                        className="flex-1 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue"
+                      />
+                      <button
+                        type="button"
+                        className="px-6 py-2.5 bg-primary hover:bg-brand-blue-hover text-white rounded-md text-sm font-semibold transition-all cursor-pointer shadow-xs shrink-0"
+                      >
+                        Validate
+                      </button>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-xs text-slate-400">
+                      <div className="size-2 rounded-full bg-primary/50 flex items-center justify-center">
+                        <div className="size-1 rounded-full bg-primary"></div>
+                      </div>
+                      <span>Paste the search URL directly from Linkedin</span>
                     </div>
                   </div>
-                )}
+                </div>
+              )}
 
-                {selectedMethod === 'csv' && (
-                  <div className="space-y-4">
-                    <div className="border border-dashed border-primary dark:border-slate-700/60 rounded-sm p-8 text-center bg-[#F8FAFF] dark:bg-slate-900 hover:border-primary/50 transition-colors flex flex-col items-center justify-center gap-2 cursor-pointer">
+              {selectedMethod === 'csv' && (
+                <div className="space-y-4">
+                  <div className="border border-dashed border-primary dark:border-slate-700/60 rounded-sm p-8 text-center bg-[#F8FAFF] dark:bg-slate-900 hover:border-primary/50 transition-colors flex flex-col items-center justify-center gap-2 cursor-pointer">
                     <span className='flex justify-center items-center gap-1 size-12 bg-[#EAEFFF] rounded-md'>
                       <Upload className="size-8 text-primary dark:text-slate-650" />
                     </span>
-                      <div className="text-sm font-medium text-primary dark:text-slate-400">
-                        {csvFile ? csvFile.name : "Drag a File or click a browse"}
-                      </div>
-                      <div className="text-xs text-[#5E5873]">File with up to 100 rows works best</div>
-                      <input 
-                        type="file" 
-                        accept=".csv"
-                        onChange={(e) => setCsvFile(e.target.files[0])}
-                        className="hidden" 
-                        id="csv-upload-field"
-                      />
-                      <label htmlFor="csv-upload-field" className="px-4 py-1.5 bg-[#EAEFFF] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition-colors">
-                        Select File
-                      </label>
+                    <div className="text-sm font-medium text-primary dark:text-slate-400">
+                      {csvFile ? csvFile.name : "Drag a File or click a browse"}
                     </div>
-                    <div className='flex items-center gap-2 text-sm text-[#5E5873] dark:text-slate-500 cursor-pointer'>
-                      <CloudDownload className='text-primary'/> Download a sample file
-                    </div>
+                    <div className="text-xs text-[#5E5873]">File with up to 100 rows works best</div>
+                    <input
+                      type="file"
+                      accept=".csv"
+                      onChange={(e) => setCsvFile(e.target.files[0])}
+                      className="hidden"
+                      id="csv-upload-field"
+                    />
+                    <label htmlFor="csv-upload-field" className="px-4 py-1.5 bg-[#EAEFFF] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition-colors">
+                      Select File
+                    </label>
                   </div>
-                )}
+                  <div className='flex items-center gap-2 text-sm text-[#5E5873] dark:text-slate-500 cursor-pointer'>
+                    <CloudDownload className='text-primary' /> Download a sample file
+                  </div>
+                </div>
+              )}
 
 
-                {selectedMethod === 'webhook' && (
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-1">
-                        <h5 className="text-sm font-bold text-[#444050] dark:text-slate-200">Inbound Webhook Url</h5>
-                        <p className="text-xs text-slate-400 dark:text-slate-500 leading-normal">
-                          Send JSON payloads to this address. Ensure you specify fields such as <code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded font-mono text-[11px] text-brand-blue">email</code> and <code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded font-mono text-[11px] text-brand-blue">linkedinUrl</code>.
-                        </p>
-                      </div>
-                      <button 
-                        onClick={copyWebhookUrl}
-                        className="flex items-center gap-1 text-xs text-brand-blue hover:text-brand-blue-hover font-semibold cursor-pointer shrink-0"
-                      >
-                        <Copy className="size-3.5" />
-                        Copy URL
-                      </button>
+              {selectedMethod === 'webhook' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <h5 className="font-normal text-slate-600 dark:text-slate-300">Inbound Webhook Url</h5>
+                      <p className="text-xs text-slate-400 dark:text-slate-500 leading-normal">
+                        Send JSON payloads to this address. Ensure you specify fields such as <code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded font-mono text-[11px] text-brand-blue">email</code> and <code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded font-mono text-[11px] text-brand-blue">linkedinUrl</code>.
+                      </p>
                     </div>
-                    <div className="font-mono text-xs p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-md text-slate-600 dark:text-slate-400 break-all select-all">
-                      https://api.frontendtask.com/v1/webhooks/inbound/usr_9837a2810
-                    </div>
+                    <button
+                      onClick={copyWebhookUrl}
+                      className="flex items-center gap-1 text-xs text-brand-blue hover:text-brand-blue-hover font-semibold cursor-pointer shrink-0"
+                    >
+                      <Copy className="size-3.5" />
+                      Copy URL
+                    </button>
                   </div>
-                )}
-              
+                  <div className="font-mono text-xs p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-md text-slate-600 dark:text-slate-400 break-all select-all">
+                    https://api.frontendtask.com/v1/webhooks/inbound/usr_9837a2810
+                  </div>
+                </div>
+              )}
+
             </div>
           </div>
         )}
@@ -501,67 +493,7 @@ export default function CampaignWorkflow({
         {/* STEP 2: SENDER PROFILES */}
         {currentStep === 2 && (
           <div className="space-y-6">
-            <div>
-              <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">Choose Sender Profile</h3>
-              <p className="text-xs text-slate-455 dark:text-slate-450 font-normal mt-1">Select the sender profile to dispatch connection requests, messages, and emails.</p>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {senderProfiles.map((sender) => {
-                const isSelected = selectedSender === sender.id;
-                const isDisconnected = sender.status === 'Disconnected';
-                return (
-                  <div
-                    key={sender.id}
-                    onClick={() => !isDisconnected && setSelectedSender(sender.id)}
-                    className={`border-2 rounded-xl p-5 relative transition-all flex flex-col justify-between gap-4 ${
-                      isDisconnected 
-                        ? 'border-slate-200 dark:border-slate-800 opacity-55 cursor-not-allowed bg-slate-50/20' 
-                        : isSelected
-                          ? 'bg-[#F6F8FF] dark:bg-blue-950/20 border-brand-blue shadow-xs cursor-pointer'
-                          : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-855 hover:border-slate-300 dark:hover:border-slate-700 cursor-pointer'
-                    }`}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="relative">
-                          <img src={sender.avatar} alt={sender.name} className="size-11 rounded-full object-cover border border-slate-200 dark:border-slate-700" />
-                          <span className={`absolute bottom-0 right-0 size-3 border-2 border-white dark:border-slate-950 rounded-full ${
-                            isDisconnected ? 'bg-rose-500' : 'bg-emerald-500'
-                          }`}></span>
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-bold text-slate-800 dark:text-slate-150 leading-tight">{sender.name}</h4>
-                          <span className={`text-[10px] font-bold uppercase tracking-wider ${
-                            sender.type === 'LinkedIn' ? 'text-blue-500' : 'text-emerald-500'
-                          }`}>{sender.type}</span>
-                        </div>
-                      </div>
-                      
-                      {isSelected && !isDisconnected && (
-                        <div className="size-5 rounded-full bg-brand-blue flex items-center justify-center text-white">
-                          <Check className="size-3 stroke-[3]" />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="space-y-1.5 pt-2 border-t border-slate-100 dark:border-slate-800/80">
-                      <div className="text-[11px] text-slate-400 dark:text-slate-500">
-                        Email: <span className="font-semibold text-slate-600 dark:text-slate-350">{sender.email}</span>
-                      </div>
-                      <div className="text-[11px] text-slate-400 dark:text-slate-500">
-                        Sending Limit: <span className="font-semibold text-slate-600 dark:text-slate-350">{sender.limit}</span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="flex items-center gap-2 text-xs text-slate-455 bg-[#F4F5F8] dark:bg-slate-800/40 p-3 rounded-lg border border-slate-200/50 dark:border-slate-800">
-              <AlertCircle className="size-4.5 text-brand-blue flex-shrink-0" />
-              <span>We recommend connecting multiple channels (LinkedIn + Email) for higher deliverability and reach.</span>
-            </div>
           </div>
         )}
 
@@ -574,14 +506,14 @@ export default function CampaignWorkflow({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              
+
               {/* Left Settings Panel */}
               <div className="space-y-5">
                 {/* Timezone */}
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Sending Timezone</label>
-                  <select 
-                    value={timezone} 
+                  <select
+                    value={timezone}
                     onChange={(e) => setTimezone(e.target.value)}
                     className="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue"
                   >
@@ -603,11 +535,10 @@ export default function CampaignWorkflow({
                           key={day}
                           type="button"
                           onClick={() => toggleDay(day)}
-                          className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                            isActive 
-                              ? 'bg-brand-blue text-white shadow-xs' 
-                              : 'bg-slate-50 dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700/60 hover:border-slate-350'
-                          }`}
+                          className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${isActive
+                            ? 'bg-brand-blue text-white shadow-xs'
+                            : 'bg-slate-50 dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700/60 hover:border-slate-350'
+                            }`}
                         >
                           {day}
                         </button>
@@ -635,17 +566,17 @@ export default function CampaignWorkflow({
                 {/* Daily Limits */}
                 <div className="space-y-4 bg-slate-50/50 dark:bg-slate-800/20 p-5 border border-slate-150 dark:border-slate-800/80 rounded-xl">
                   <h4 className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Daily Outreach Limits</h4>
-                  
+
                   {/* limit 1 */}
                   <div className="space-y-1.5">
                     <div className="flex justify-between text-xs font-semibold">
                       <span className="text-slate-500">LinkedIn Connections</span>
                       <span className="text-brand-blue">{dailyLimits.connections} / day</span>
                     </div>
-                    <input 
-                      type="range" min="10" max="150" 
+                    <input
+                      type="range" min="10" max="150"
                       value={dailyLimits.connections}
-                      onChange={(e) => setDailyLimits({...dailyLimits, connections: parseInt(e.target.value)})}
+                      onChange={(e) => setDailyLimits({ ...dailyLimits, connections: parseInt(e.target.value) })}
                       className="w-full h-1.5 bg-slate-200 dark:bg-slate-855 rounded-lg appearance-none cursor-pointer accent-brand-blue"
                     />
                   </div>
@@ -656,10 +587,10 @@ export default function CampaignWorkflow({
                       <span className="text-slate-500">Email Dispatch Volume</span>
                       <span className="text-brand-blue">{dailyLimits.emails} / day</span>
                     </div>
-                    <input 
-                      type="range" min="50" max="1000" 
+                    <input
+                      type="range" min="50" max="1000"
                       value={dailyLimits.emails}
-                      onChange={(e) => setDailyLimits({...dailyLimits, emails: parseInt(e.target.value)})}
+                      onChange={(e) => setDailyLimits({ ...dailyLimits, emails: parseInt(e.target.value) })}
                       className="w-full h-1.5 bg-slate-200 dark:bg-slate-855 rounded-lg appearance-none cursor-pointer accent-brand-blue"
                     />
                   </div>
@@ -668,13 +599,13 @@ export default function CampaignWorkflow({
                 {/* Tracking preferences */}
                 <div className="space-y-3">
                   <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">Tracking Preferences</label>
-                  
+
                   {/* Track 1 */}
                   <label className="flex items-center gap-3 cursor-pointer">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       checked={tracking.opens}
-                      onChange={(e) => setTracking({...tracking, opens: e.target.checked})}
+                      onChange={(e) => setTracking({ ...tracking, opens: e.target.checked })}
                       className="rounded border-slate-300 text-brand-blue focus:ring-brand-blue/30 size-4 cursor-pointer"
                     />
                     <span className="text-xs text-slate-655 dark:text-slate-400 font-medium">Track email open rates</span>
@@ -682,10 +613,10 @@ export default function CampaignWorkflow({
 
                   {/* Track 2 */}
                   <label className="flex items-center gap-3 cursor-pointer">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       checked={tracking.clicks}
-                      onChange={(e) => setTracking({...tracking, clicks: e.target.checked})}
+                      onChange={(e) => setTracking({ ...tracking, clicks: e.target.checked })}
                       className="rounded border-slate-300 text-brand-blue focus:ring-brand-blue/30 size-4 cursor-pointer"
                     />
                     <span className="text-xs text-slate-655 dark:text-slate-400 font-medium">Track email link click clicks</span>
@@ -693,10 +624,10 @@ export default function CampaignWorkflow({
 
                   {/* Track 3 */}
                   <label className="flex items-center gap-3 cursor-pointer">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       checked={tracking.replies}
-                      onChange={(e) => setTracking({...tracking, replies: e.target.checked})}
+                      onChange={(e) => setTracking({ ...tracking, replies: e.target.checked })}
                       className="rounded border-slate-300 text-brand-blue focus:ring-brand-blue/30 size-4 cursor-pointer"
                     />
                     <span className="text-xs text-slate-655 dark:text-slate-400 font-medium">Stop sending sequence when reply is received</span>
@@ -719,24 +650,23 @@ export default function CampaignWorkflow({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              
+
               {/* Form Input Column */}
               <div className="md:col-span-2 space-y-4">
-                
+
                 {/* Campaign Name */}
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">Campaign Name</label>
-                  <input 
-                    type="text" 
-                    placeholder="E.g., Q3 Enterprise Outreach" 
+                  <input
+                    type="text"
+                    placeholder="E.g., Q3 Enterprise Outreach"
                     value={campaignDetails.name}
                     onChange={(e) => {
-                      setCampaignDetails({...campaignDetails, name: e.target.value});
-                      if (errors.name) setErrors({...errors, name: ''});
+                      setCampaignDetails({ ...campaignDetails, name: e.target.value });
+                      if (errors.name) setErrors({ ...errors, name: '' });
                     }}
-                    className={`w-full px-4 py-2.5 bg-white dark:bg-slate-900 border rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue ${
-                      errors.name ? 'border-rose-500 ring-2 ring-rose-500/25' : 'border-slate-200 dark:border-slate-800'
-                    }`}
+                    className={`w-full px-4 py-2.5 bg-white dark:bg-slate-900 border rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue ${errors.name ? 'border-rose-500 ring-2 ring-rose-500/25' : 'border-slate-200 dark:border-slate-800'
+                      }`}
                   />
                   {errors.name && <p className="text-xs font-semibold text-rose-500 mt-1">{errors.name}</p>}
                 </div>
@@ -745,9 +675,9 @@ export default function CampaignWorkflow({
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">Channel Type</label>
-                    <select 
-                      value={campaignDetails.channel} 
-                      onChange={(e) => setCampaignDetails({...campaignDetails, channel: e.target.value})}
+                    <select
+                      value={campaignDetails.channel}
+                      onChange={(e) => setCampaignDetails({ ...campaignDetails, channel: e.target.value })}
                       className="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden"
                     >
                       <option value="Email">Email</option>
@@ -759,9 +689,9 @@ export default function CampaignWorkflow({
 
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">Initial Status</label>
-                    <select 
-                      value={campaignDetails.status} 
-                      onChange={(e) => setCampaignDetails({...campaignDetails, status: e.target.value})}
+                    <select
+                      value={campaignDetails.status}
+                      onChange={(e) => setCampaignDetails({ ...campaignDetails, status: e.target.value })}
                       className="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden"
                     >
                       <option value="Active">Active</option>
@@ -774,17 +704,16 @@ export default function CampaignWorkflow({
                 {/* Subject Line */}
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">Subject Line</label>
-                  <input 
-                    type="text" 
-                    placeholder="E.g., Quick question regarding your pipeline..." 
+                  <input
+                    type="text"
+                    placeholder="E.g., Quick question regarding your pipeline..."
                     value={campaignDetails.subject}
                     onChange={(e) => {
-                      setCampaignDetails({...campaignDetails, subject: e.target.value});
-                      if (errors.subject) setErrors({...errors, subject: ''});
+                      setCampaignDetails({ ...campaignDetails, subject: e.target.value });
+                      if (errors.subject) setErrors({ ...errors, subject: '' });
                     }}
-                    className={`w-full px-4 py-2.5 bg-white dark:bg-slate-900 border rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue ${
-                      errors.subject ? 'border-rose-500 ring-2 ring-rose-500/25' : 'border-slate-200 dark:border-slate-800'
-                    }`}
+                    className={`w-full px-4 py-2.5 bg-white dark:bg-slate-900 border rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue ${errors.subject ? 'border-rose-500 ring-2 ring-rose-500/25' : 'border-slate-200 dark:border-slate-800'
+                      }`}
                   />
                   {errors.subject && <p className="text-xs font-semibold text-rose-500 mt-1">{errors.subject}</p>}
                 </div>
@@ -792,10 +721,10 @@ export default function CampaignWorkflow({
                 {/* Description */}
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">Campaign Description</label>
-                  <textarea 
-                    placeholder="Brief description of the workflow goal..." 
+                  <textarea
+                    placeholder="Brief description of the workflow goal..."
                     value={campaignDetails.description}
-                    onChange={(e) => setCampaignDetails({...campaignDetails, description: e.target.value})}
+                    onChange={(e) => setCampaignDetails({ ...campaignDetails, description: e.target.value })}
                     rows="3"
                     className="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden"
                   />
@@ -806,7 +735,7 @@ export default function CampaignWorkflow({
               {/* Sidebar Summary Card */}
               <div className="bg-slate-50/50 dark:bg-slate-800/20 border border-slate-150 dark:border-slate-800/80 rounded-xl p-5 space-y-4">
                 <h4 className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider pb-2 border-b border-slate-200/50 dark:border-slate-800">Campaign Summary</h4>
-                
+
                 <div className="space-y-3">
                   <div className="text-[11px] text-slate-400 dark:text-slate-500 leading-tight">
                     Workflow Mode: <span className="font-bold text-slate-700 dark:text-slate-300 block text-xs mt-0.5 capitalize">{mode}</span>
@@ -837,7 +766,7 @@ export default function CampaignWorkflow({
 
         {/* footer action buttons */}
         <div className="flex items-center justify-end gap-4 mt-10">
-          {currentStep === 1 ? '' :  <button
+          {currentStep === 1 ? '' : <button
             type="button"
             onClick={handleBackStep}
             className="flex items-center gap-2 px-5 py-2.5 rounded-sm bg-slate-100 hover:bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-750 text-sm font-semibold transition-all cursor-pointer"
@@ -845,7 +774,7 @@ export default function CampaignWorkflow({
             <ArrowLeft className="size-4" />
             <span>Back</span>
           </button>}
-          
+
           <button
             type="button"
             onClick={handleNextStep}
@@ -855,7 +784,7 @@ export default function CampaignWorkflow({
           </button>
         </div>
 
-        
+
 
       </div>
     </div>
