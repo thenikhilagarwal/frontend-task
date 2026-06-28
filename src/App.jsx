@@ -58,9 +58,11 @@ export default function App() {
   }, [campaigns]);
 
   // Handlers
-  const handleSaveCampaign = (newCampaign) => {
+  const handleSaveCampaign = (newCampaign, redirect = true) => {
     setCampaigns((prev) => [newCampaign, ...prev]);
-    setCurrentView('list');
+    if (redirect) {
+      setCurrentView('list');
+    }
     setIsModalOpen(false);
   };
 

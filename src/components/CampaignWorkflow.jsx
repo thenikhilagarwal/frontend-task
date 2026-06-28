@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import LookalikeModal from './LookalikeModal';
+import zapier from '../assets/zapier.png';
+import n8n from '../assets/n8n.png';
+import webhooks from '../assets/webhooks.png';
+import stats from '../assets/stats.png';
 import {
   ListChecks,
   User,
@@ -15,10 +18,24 @@ import {
   Upload,
   Check,
   Sparkles,
-  AlertCircle,
   Copy,
-  ArrowLeft,
-  CloudDownload
+  CornerDownLeft,
+  CloudDownload,
+  Search,
+  Plus,
+  Mail,
+  Trash2,
+  Clock,
+  Bot,
+  MessageCircleMore,
+  Rocket,
+  Pause,
+  Megaphone,
+  SquarePen,
+  MessageSquare,
+  Send,
+  UserCheck,
+  ExternalLink
 } from 'lucide-react';
 
 const Linkedin = (props) => (
@@ -47,6 +64,7 @@ export default function CampaignWorkflow({
 }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [importAccordionOpen, setImportAccordionOpen] = useState(true);
+  const [isLaunched, setIsLaunched] = useState(false);
 
   // Form/State values
   const [selectedMethod, setSelectedMethod] = useState('linkedin');
@@ -55,46 +73,142 @@ export default function CampaignWorkflow({
   const [leadList, setLeadList] = useState('My Warm Leads');
 
   // Step 2: Sender Profiles State
-  const [selectedSender, setSelectedSender] = useState('sender-1');
-  const senderProfiles = [
+  const [activeSenderTab, setActiveSenderTab] = useState('linkedin');
+  const [senderSearchQuery, setSenderSearchQuery] = useState('');
+  const [senderShowLimit, setSenderShowLimit] = useState(10);
+  const [selectedSenderRows, setSelectedSenderRows] = useState(['linkedin-1']); // default selected matching screenshot
+
+  const [linkedinSenders, setLinkedinSenders] = useState([
     {
-      id: 'sender-1',
-      name: 'John Doe (LinkedIn)',
-      type: 'LinkedIn',
-      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      status: 'Active',
-      limit: '100 connections / day',
-      email: 'john.doe@company.com'
+      id: 'linkedin-1',
+      name: 'Edgar Jones',
+      connections: '1,250 connections',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      health: 72,
+      limit: 'Invites: 40 / day',
+      accountType: 'Premium',
+      status: 'Connected'
     },
     {
-      id: 'sender-2',
-      name: 'John Doe (Email)',
-      type: 'Email',
-      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      status: 'Active',
-      limit: '500 emails / day',
-      email: 'johndoe@gmail.com'
-    },
-    {
-      id: 'sender-3',
-      name: 'Jane Smith (LinkedIn)',
-      type: 'LinkedIn',
+      id: 'linkedin-2',
+      name: 'Sarah Jenkins',
+      connections: '850 connections',
       avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-      status: 'Disconnected',
-      limit: '0 connections / day',
-      email: 'jane.smith@company.com'
+      health: 94,
+      limit: 'Invites: 60 / day',
+      accountType: 'Standard',
+      status: 'Connected'
+    },
+    {
+      id: 'linkedin-3',
+      name: 'Michael Brown',
+      connections: '3,100 connections',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      health: 45,
+      limit: 'Invites: 20 / day',
+      accountType: 'Premium',
+      status: 'Disconnected'
     }
-  ];
+  ]);
+
+  const [emailSenders, setEmailSenders] = useState([
+    {
+      id: 'email-1',
+      name: 'John Doe',
+      connections: 'john.doe@company.com',
+      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      health: 98,
+      limit: 'Emails: 200 / day',
+      accountType: 'Google Workspace',
+      status: 'Connected'
+    },
+    {
+      id: 'email-2',
+      name: 'Jane Smith',
+      connections: 'jane.smith@company.com',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      health: 85,
+      limit: 'Emails: 150 / day',
+      accountType: 'Microsoft 365',
+      status: 'Connected'
+    },
+    {
+      id: 'email-3',
+      name: 'Sales Outreach',
+      connections: 'info@salesreach.io',
+      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      health: 60,
+      limit: 'Emails: 50 / day',
+      accountType: 'SMTP / Custom',
+      status: 'Warning'
+    }
+  ]);
+
+  const handleLimitChange = (id, newLimit) => {
+    if (activeSenderTab === 'linkedin') {
+      setLinkedinSenders(prev => prev.map(item => item.id === id ? { ...item, limit: newLimit } : item));
+    } else {
+      setEmailSenders(prev => prev.map(item => item.id === id ? { ...item, limit: newLimit } : item));
+    }
+  };
+
+  const toggleRowSelection = (id) => {
+    setSelectedSenderRows(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(rowId => rowId !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
+  };
+
+  const activeProfiles = activeSenderTab === 'linkedin' ? linkedinSenders : emailSenders;
+  const filteredProfiles = activeProfiles.filter(profile =>
+    profile.name.toLowerCase().includes(senderSearchQuery.toLowerCase()) ||
+    profile.connections.toLowerCase().includes(senderSearchQuery.toLowerCase())
+  );
+  const visibleProfiles = filteredProfiles.slice(0, senderShowLimit);
+
+  const toggleAllRows = (visibleRows) => {
+    const visibleIds = visibleRows.map(r => r.id);
+    const allSelected = visibleIds.every(id => selectedSenderRows.includes(id));
+    if (allSelected) {
+      setSelectedSenderRows(prev => prev.filter(id => !visibleIds.includes(id)));
+    } else {
+      setSelectedSenderRows(prev => {
+        const unique = new Set([...prev, ...visibleIds]);
+        return Array.from(unique);
+      });
+    }
+  };
 
   // Step 3: Settings State
   const [timezone, setTimezone] = useState('America/New_York');
-  const [selectedDays, setSelectedDays] = useState(['Mon', 'Tue', 'Wed', 'Thu', 'Fri']);
+  const [selectedDays, setSelectedDays] = useState(['Mon', 'Tue', 'Wed', 'Thu', 'Sat']);
   const [dailyLimits, setDailyLimits] = useState({ connections: 80, messages: 120, emails: 300 });
   const [tracking, setTracking] = useState({ opens: true, clicks: true, replies: true });
 
+  // Additional Step 3 States from Screenshot
+  const [sendingWindowName, setSendingWindowName] = useState('USA Outreach Time');
+  const [timeRange, setTimeRange] = useState('11:30 AM - 04:00 PM');
+  const [timezoneName, setTimezoneName] = useState('USA Timezone');
+
+  const [aiAssistAutoMessage, setAiAssistAutoMessage] = useState(false);
+  const [aiAssistAutoHandle, setAiAssistAutoHandle] = useState(false);
+  const [aiAssistFollowUps, setAiAssistFollowUps] = useState('2');
+
+  const [triggerZapier, setTriggerZapier] = useState(true);
+  const [zapierEvents, setZapierEvents] = useState({
+    responseReceived: true,
+    inviteSent: false,
+    invitationAccepted: false,
+    invitationWithdrawn: false,
+    followupSent: false
+  });
+
   // Step 4: Final Campaign Stats/Setup State
   const [campaignDetails, setCampaignDetails] = useState({
-    name: '',
+    name: 'New Outreach Campaign',
     channel: 'Email',
     subject: '',
     description: '',
@@ -110,40 +224,40 @@ export default function CampaignWorkflow({
     }
   };
 
+  const handleLaunchCampaign = () => {
+    const campaignName = campaignDetails.name || 'Tech Founder';
+    const campaignSubject = campaignDetails.subject || 'Quick question regarding your pipeline...';
+
+    onSave({
+      id: Date.now().toString(),
+      name: campaignName,
+      channel: campaignDetails.channel || 'Email',
+      subject: campaignSubject,
+      status: 'Active',
+      description: campaignDetails.description || 'Campaign created via Advanced Workflow',
+      workflowMode: mode,
+      createdAt: new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      }),
+      metrics: {
+        sent: 988,
+        openedRate: 61,
+        clickedRate: 44,
+      }
+    }, false);
+
+    setIsLaunched(true);
+  };
+
   const handleNextStep = () => {
     if (currentStep < 4) {
       setCurrentStep(prev => prev + 1);
     } else {
-      // Validate step 4 details
-      const newErrors = {};
-      if (!campaignDetails.name.trim()) newErrors.name = 'Campaign Name is required';
-      if (!campaignDetails.subject.trim()) newErrors.subject = 'Subject Line is required';
-
-      if (Object.keys(newErrors).length > 0) {
-        setErrors(newErrors);
-        return;
+      if (!isLaunched) {
+        handleLaunchCampaign();
       }
-
-      // Finish and Save
-      onSave({
-        id: Date.now().toString(),
-        name: campaignDetails.name,
-        channel: campaignDetails.channel,
-        subject: campaignDetails.subject,
-        status: campaignDetails.status,
-        description: campaignDetails.description,
-        workflowMode: mode,
-        createdAt: new Date().toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-        }),
-        metrics: {
-          sent: 0,
-          openedRate: 0,
-          clickedRate: 0,
-        }
-      });
     }
   };
 
@@ -184,12 +298,12 @@ export default function CampaignWorkflow({
           <div className={`size-10 rounded-lg flex items-center justify-center transition-all ${currentStep === 2
             ? 'bg-primary text-white shadow-md shadow-blue-500/20'
             : currentStep > 2
-              ? 'bg-emerald-500/10 text-emerald-500'
+              ? 'bg-[#D0DCFF] text-primary'
               : 'bg-[#E8E8E8] dark:bg-slate-800 text-slate-400'
             }`}>
             <User className="size-5" />
           </div>
-          <div className={`text-base font-medium ${currentStep === 1 ? 'text-[#5E5873] dark:text-slate-100' : 'text-[#444050] dark:text-slate-400'}`}>Sender Profiles</div>
+          <div className={`text-base font-medium ${currentStep === 2 ? 'text-[#5E5873] dark:text-slate-100' : 'text-[#444050] dark:text-slate-400'}`}>Sender Profiles</div>
         </div>
 
         <ChevronRight className="size-5 text-[#6E6B7B]" />
@@ -197,14 +311,14 @@ export default function CampaignWorkflow({
         {/* Step 3: Settings */}
         <div className="flex items-center gap-3">
           <div className={`size-10 rounded-lg flex items-center justify-center transition-all ${currentStep === 3
-            ? 'bg-brand-blue text-white shadow-md shadow-blue-500/20'
+            ? 'bg-primary text-white shadow-md shadow-blue-500/20'
             : currentStep > 3
-              ? 'bg-emerald-500/10 text-emerald-500'
-              : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+              ? 'bg-[#D0DCFF] text-primary'
+              : 'bg-[#E8E8E8] dark:bg-slate-800 text-slate-400'
             }`}>
             <Settings className="size-5" />
           </div>
-          <div className={`text-base font-medium ${currentStep === 1 ? 'text-[#5E5873] dark:text-slate-100' : 'text-[#444050] dark:text-slate-400'}`}>Settings</div>
+          <div className={`text-base font-medium ${currentStep === 3 ? 'text-[#5E5873] dark:text-slate-100' : 'text-[#444050] dark:text-slate-400'}`}>Settings</div>
         </div>
 
         <ChevronRight className="size-5 text-[#6E6B7B]" />
@@ -212,12 +326,12 @@ export default function CampaignWorkflow({
         {/* Step 4: Stats */}
         <div className="flex items-center gap-3">
           <div className={`size-10 rounded-lg flex items-center justify-center transition-all ${currentStep === 4
-            ? 'bg-brand-blue text-white shadow-md shadow-blue-500/20'
-            : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+            ? 'bg-primary text-white'
+            : 'bg-[#D0DCFF] text-primary'
             }`}>
             <BarChart3 className="size-5" />
           </div>
-          <div className={`text-base font-medium ${currentStep === 1 ? 'text-[#5E5873] dark:text-slate-100' : 'text-slate-500 dark:text-slate-400'}`}>Stats</div>
+          <div className={`text-base font-medium ${currentStep === 4 ? 'text-[#5E5873] dark:text-slate-100' : 'text-[#444050] dark:text-slate-400'}`}>Stats</div>
         </div>
       </div>
 
@@ -493,296 +607,1096 @@ export default function CampaignWorkflow({
         {/* STEP 2: SENDER PROFILES */}
         {currentStep === 2 && (
           <div className="space-y-6">
+            {/* Tabs */}
+            <div className="flex items-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveSenderTab('linkedin');
+                  setSelectedSenderRows(['linkedin-1']); // default selected row for this tab
+                }}
+                className={`px-5 py-2.5 text-sm font-medium border border-primary transition-all duration-200 rounded-l-md cursor-pointer ${activeSenderTab === 'linkedin'
+                  ? 'bg-[#CFDAFE] text-primary dark:bg-primary/20 dark:text-blue-400'
+                  : 'bg-white text-[#3666EE] hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-350'
+                  }`}
+              >
+                LinkedIn Profile
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveSenderTab('email');
+                  setSelectedSenderRows(['email-1']); // default selected row for this tab
+                }}
+                className={`px-5 py-2.5 text-sm font-medium border-y border-r border-primary transition-all duration-200 rounded-r-lg cursor-pointer ${activeSenderTab === 'email'
+                  ? 'bg-[#EAEFFF] text-primary dark:bg-primary/20 dark:text-blue-400'
+                  : 'bg-white text-[#3666EE] hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-350'
+                  }`}
+              >
+                Email Accounts
+              </button>
+            </div>
 
+            {/* Card Content */}
+            <div className="bg-white dark:bg-slate-900 border border-[#E0E0E0] dark:border-slate-800 rounded-lg shadow-xs overflow-hidden">
+              {/* Header */}
+              <div className="p-6 border-b border-[#E0E0E0] dark:border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2.5">
+                    {activeSenderTab === 'linkedin' ? (
+                      <div className="bg-[#0A66C2] text-white p-1 rounded-sm size-6 flex items-center justify-center shrink-0">
+                        <Linkedin className="size-4" fill="currentColor" stroke="none" />
+                      </div>
+                    ) : (
+                      <div className="bg-primary text-white p-1.5 rounded-sm size-6 flex items-center justify-center shrink-0">
+                        <Mail className="size-4" />
+                      </div>
+                    )}
+                    <h3 className="text-base font-semibold text-slate-800 dark:text-slate-150">
+                      {activeSenderTab === 'linkedin' ? 'LinkedIn Profile' : 'Email Accounts'}
+                    </h3>
+                  </div>
+                  <p className="text-xs text-[#444050] font-normal leading-normal">
+                    {activeSenderTab === 'linkedin'
+                      ? 'Pick which LinkedIn profiles you want to use for this campaign.'
+                      : 'Pick which email accounts you want to use for this campaign.'}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-primary hover:bg-[#2e5cd0] text-white rounded-md text-sm font-semibold transition-all duration-150 flex items-center gap-1.5 cursor-pointer shadow-xs active-scale-98"
+                >
+                  <Plus className="size-4" />
+                  Add Account
+                </button>
+              </div>
+
+              {/* Action Bar / Controls */}
+              <div className="px-6 py-4 bg-white dark:bg-slate-900/10 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4">
+                {/* Page Size Selector */}
+                <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                  <span>Show</span>
+                  <div className="relative">
+                    <select
+                      value={senderShowLimit}
+                      onChange={(e) => setSenderShowLimit(parseInt(e.target.value))}
+                      className="appearance-none bg-white dark:bg-slate-900 pl-3 pr-8 py-1.5 border border-slate-200 dark:border-slate-800 rounded-md text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-hidden focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer"
+                    >
+                      <option value="10">10</option>
+                      <option value="25">25</option>
+                      <option value="50">50</option>
+                    </select>
+                    <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                  </div>
+                </div>
+
+                {/* Search Bar */}
+                <div className="relative w-full sm:w-64">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    value={senderSearchQuery}
+                    onChange={(e) => setSenderSearchQuery(e.target.value)}
+                    className="w-full pl-9 pr-4 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-xs text-slate-800 dark:text-slate-150 placeholder-slate-400 focus:outline-hidden focus:ring-1 focus:ring-primary focus:border-primary transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Table Container */}
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[700px] border-collapse text-left text-sm text-slate-500 dark:text-slate-400">
+                  <thead className="bg-[#F3F2F7] dark:bg-slate-850/30 text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
+                    <tr>
+                      <th scope="col" className="p-6 w-12 text-center">
+                        <input
+                          type="checkbox"
+                          checked={visibleProfiles.length > 0 && visibleProfiles.every(p => selectedSenderRows.includes(p.id))}
+                          onChange={() => toggleAllRows(visibleProfiles)}
+                          className="size-4 rounded-sm border-slate-300 dark:border-slate-700 text-primary focus:ring-primary/30 cursor-pointer"
+                        />
+                      </th>
+                      <th scope="col" className="px-6 py-4 font-bold">Name</th>
+                      <th scope="col" className="px-6 py-4 font-bold text-center">Health</th>
+                      <th scope="col" className="px-6 py-4 font-bold text-center">Daily Limits</th>
+                      <th scope="col" className="px-6 py-4 font-bold">Account Type</th>
+                      <th scope="col" className="px-6 py-4 font-bold text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    {visibleProfiles.length === 0 ? (
+                      <tr>
+                        <td colSpan="6" className="px-6 py-12 text-center text-slate-400 dark:text-slate-500">
+                          No profiles found matching search criteria.
+                        </td>
+                      </tr>
+                    ) : (
+                      visibleProfiles.map((profile) => {
+                        const isSelected = selectedSenderRows.includes(profile.id);
+                        return (
+                          <tr
+                            key={profile.id}
+                            className={`hover:bg-slate-50/55 dark:hover:bg-slate-800/10 transition-colors duration-150 ${isSelected ? 'bg-[#F6F8FF] dark:bg-blue-950/20' : ''
+                              }`}
+                          >
+                            <td className="p-6 text-center">
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={() => toggleRowSelection(profile.id)}
+                                className="size-4 rounded-sm border-slate-300 dark:border-slate-700 text-primary focus:ring-primary/30 cursor-pointer"
+                              />
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="flex items-center gap-3">
+                                <img
+                                  src={profile.avatar}
+                                  alt={profile.name}
+                                  className="size-9 rounded-full object-cover border border-slate-100 dark:border-slate-800"
+                                />
+                                <div className="flex flex-col">
+                                  <span className="font-semibold text-slate-700 dark:text-slate-200 text-sm">
+                                    {profile.name}
+                                  </span>
+                                  <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-normal">
+                                    {profile.connections}
+                                  </span>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="relative flex items-center justify-center size-10 mx-auto">
+                                <svg className="size-10" viewBox="0 0 36 36">
+                                  <path
+                                    className="text-slate-100 dark:text-slate-800"
+                                    strokeWidth="3.5"
+                                    stroke="currentColor"
+                                    fill="none"
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                  />
+                                  <path
+                                    className={
+                                      profile.health >= 80
+                                        ? 'text-emerald-500'
+                                        : profile.health >= 50
+                                          ? 'text-amber-500'
+                                          : 'text-rose-500'
+                                    }
+                                    strokeWidth="3.5"
+                                    strokeDasharray={`${profile.health}, 100`}
+                                    strokeLinecap="round"
+                                    stroke="currentColor"
+                                    fill="none"
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                  />
+                                </svg>
+                                <span className="absolute text-xs font-bold text-slate-700 dark:text-slate-250">
+                                  {profile.health}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 text-center">
+                              <div className="flex justify-center">
+                                <input
+                                  type="text"
+                                  value={profile.limit}
+                                  onChange={(e) => handleLimitChange(profile.id, e.target.value)}
+                                  className="w-36 px-2.5 py-1.5 text-center text-xs font-semibold border border-slate-200 dark:border-slate-750 rounded-md text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 focus:outline-hidden focus:ring-1 focus:ring-primary focus:border-primary"
+                                />
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="flex items-center gap-2">
+                                {profile.accountType === 'Premium' && (
+                                  <>
+                                    <div className="bg-[#D79A2A] text-white p-0.5 rounded-xs size-5 flex items-center justify-center shrink-0">
+                                      <Linkedin className="size-3.5" fill="currentColor" stroke="none" />
+                                    </div>
+                                    <span className="text-xs font-medium text-slate-650 dark:text-slate-300">Premium</span>
+                                  </>
+                                )}
+                                {profile.accountType === 'Standard' && (
+                                  <>
+                                    <div className="bg-[#0A66C2] text-white p-0.5 rounded-xs size-5 flex items-center justify-center shrink-0">
+                                      <Linkedin className="size-3.5" fill="currentColor" stroke="none" />
+                                    </div>
+                                    <span className="text-xs font-medium text-slate-650 dark:text-slate-300">Standard</span>
+                                  </>
+                                )}
+                                {profile.accountType === 'Google Workspace' && (
+                                  <>
+                                    <svg className="size-5 shrink-0" viewBox="0 0 24 24">
+                                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22c-.22-.66-.35-1.36-.35-2.09z" />
+                                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                                    </svg>
+                                    <span className="text-xs font-medium text-slate-650 dark:text-slate-300">Google Workspace</span>
+                                  </>
+                                )}
+                                {profile.accountType === 'Microsoft 365' && (
+                                  <>
+                                    <svg className="size-4.5 shrink-0" viewBox="0 0 23 23">
+                                      <rect x="0" y="0" width="10.5" height="10.5" fill="#F25022" />
+                                      <rect x="11.5" y="0" width="10.5" height="10.5" fill="#7FBA00" />
+                                      <rect x="0" y="11.5" width="10.5" height="10.5" fill="#00A1F1" />
+                                      <rect x="11.5" y="11.5" width="10.5" height="10.5" fill="#FFB900" />
+                                    </svg>
+                                    <span className="text-xs font-medium text-slate-650 dark:text-slate-300">Microsoft 365</span>
+                                  </>
+                                )}
+                                {profile.accountType === 'SMTP / Custom' && (
+                                  <>
+                                    <Mail className="size-4.5 text-indigo-500 shrink-0" />
+                                    <span className="text-xs font-medium text-slate-650 dark:text-slate-300">SMTP / Custom</span>
+                                  </>
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 text-center">
+                              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wide ${profile.status === 'Connected'
+                                ? 'bg-[#00C875] text-white'
+                                : profile.status === 'Warning'
+                                  ? 'bg-amber-500 text-white'
+                                  : 'bg-slate-400 text-white'
+                                }`}>
+                                {profile.status}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         )}
 
         {/* STEP 3: SETTINGS */}
         {currentStep === 3 && (
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">Campaign Sending Schedule & Limits</h3>
-              <p className="text-xs text-slate-455 dark:text-slate-450 font-normal mt-1">Configure active times, weekly schedules, daily volume constraints, and tracking.</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-              {/* Left Settings Panel */}
-              <div className="space-y-5">
-                {/* Timezone */}
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Sending Timezone</label>
-                  <select
-                    value={timezone}
-                    onChange={(e) => setTimezone(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue"
-                  >
-                    <option value="America/New_York">(GMT-05:00) Eastern Time (US & Canada)</option>
-                    <option value="Europe/London">(GMT+00:00) London, Dublin, Edinburgh</option>
-                    <option value="Asia/Kolkata">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
-                    <option value="Asia/Tokyo">(GMT+09:00) Osaka, Sapporo, Tokyo</option>
-                  </select>
-                </div>
-
-                {/* Sending Days */}
-                <div className="space-y-2.5">
-                  <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">Active Sending Days</label>
-                  <div className="flex gap-2 flex-wrap">
-                    {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => {
-                      const isActive = selectedDays.includes(day);
-                      return (
-                        <button
-                          key={day}
-                          type="button"
-                          onClick={() => toggleDay(day)}
-                          className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${isActive
-                            ? 'bg-brand-blue text-white shadow-xs'
-                            : 'bg-slate-50 dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700/60 hover:border-slate-350'
-                            }`}
-                        >
-                          {day}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Time Range */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Start Time</label>
-                    <input type="time" defaultValue="09:00" className="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue" />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">End Time</label>
-                    <input type="time" defaultValue="17:00" className="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue" />
-                  </div>
-                </div>
-
+          <div className="space-y-6 animate-fade-in">
+            <div class="flex flex-col gap-5 border border-[#EBE9F1] p-5">
+              {/* Campaign Name */}
+              <div className="space-y-1.5">
+                <label className="text-base font-medium text-[#444050] dark:text-slate-200 mb-2 block">Campaign name</label>
+                <input
+                  type="text"
+                  value={campaignDetails.name}
+                  onChange={(e) => setCampaignDetails({ ...campaignDetails, name: e.target.value })}
+                  className="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-slate-800 dark:text-slate-150 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-xs"
+                  placeholder="Campaign Name"
+                />
               </div>
 
-              {/* Right Settings Panel */}
-              <div className="space-y-5">
-                {/* Daily Limits */}
-                <div className="space-y-4 bg-slate-50/50 dark:bg-slate-800/20 p-5 border border-slate-150 dark:border-slate-800/80 rounded-xl">
-                  <h4 className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Daily Outreach Limits</h4>
-
-                  {/* limit 1 */}
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between text-xs font-semibold">
-                      <span className="text-slate-500">LinkedIn Connections</span>
-                      <span className="text-brand-blue">{dailyLimits.connections} / day</span>
-                    </div>
-                    <input
-                      type="range" min="10" max="150"
-                      value={dailyLimits.connections}
-                      onChange={(e) => setDailyLimits({ ...dailyLimits, connections: parseInt(e.target.value) })}
-                      className="w-full h-1.5 bg-slate-200 dark:bg-slate-855 rounded-lg appearance-none cursor-pointer accent-brand-blue"
-                    />
-                  </div>
-
-                  {/* limit 2 */}
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between text-xs font-semibold">
-                      <span className="text-slate-500">Email Dispatch Volume</span>
-                      <span className="text-brand-blue">{dailyLimits.emails} / day</span>
-                    </div>
-                    <input
-                      type="range" min="50" max="1000"
-                      value={dailyLimits.emails}
-                      onChange={(e) => setDailyLimits({ ...dailyLimits, emails: parseInt(e.target.value) })}
-                      className="w-full h-1.5 bg-slate-200 dark:bg-slate-855 rounded-lg appearance-none cursor-pointer accent-brand-blue"
-                    />
-                  </div>
+              <div className="flex flex-col gap-3">
+                {/* Sending Window Header */}
+                <div className="space-y-1">
+                  <h3 className="text-base font-medium text-[#444050] dark:text-slate-100">Sending Window</h3>
+                  <p className="text-xs text-[#444050] dark:text-slate-500 font-normal">Define when the campaign runs</p>
                 </div>
 
-                {/* Tracking preferences */}
-                <div className="space-y-3">
-                  <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">Tracking Preferences</label>
+                {/* Two-Column Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                  {/* Track 1 */}
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={tracking.opens}
-                      onChange={(e) => setTracking({ ...tracking, opens: e.target.checked })}
-                      className="rounded border-slate-300 text-brand-blue focus:ring-brand-blue/30 size-4 cursor-pointer"
-                    />
-                    <span className="text-xs text-slate-655 dark:text-slate-400 font-medium">Track email open rates</span>
-                  </label>
+                  {/* Left Column: Sending Window Configuration */}
+                  <div className="border border-[#EBE9F1] dark:border-slate-800 rounded-lg p-5 bg-white dark:bg-slate-900 space-y-4 flex flex-col justify-between min-h-[220px]">
 
-                  {/* Track 2 */}
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={tracking.clicks}
-                      onChange={(e) => setTracking({ ...tracking, clicks: e.target.checked })}
-                      className="rounded border-slate-300 text-brand-blue focus:ring-brand-blue/30 size-4 cursor-pointer"
-                    />
-                    <span className="text-xs text-slate-655 dark:text-slate-400 font-medium">Track email link click clicks</span>
-                  </label>
+                    {/* Dropdown */}
+                    <div className="relative">
+                      <select
+                        value={sendingWindowName}
+                        onChange={(e) => setSendingWindowName(e.target.value)}
+                        className="w-full appearance-none px-4 py-2.5 bg-white dark:bg-slate-900 border border-[#D8D6DE] rounded-md text-sm text-[#444050] dark:text-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary pr-10 cursor-pointer"
+                      >
+                        <option value="USA Outreach Time">USA Outreach Time</option>
+                        <option value="Europe Outreach Time">Europe Outreach Time</option>
+                        <option value="Asia Outreach Time">Asia Outreach Time</option>
+                      </select>
+                      <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                    </div>
 
-                  {/* Track 3 */}
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={tracking.replies}
-                      onChange={(e) => setTracking({ ...tracking, replies: e.target.checked })}
-                      className="rounded border-slate-300 text-brand-blue focus:ring-brand-blue/30 size-4 cursor-pointer"
-                    />
-                    <span className="text-xs text-slate-655 dark:text-slate-400 font-medium">Stop sending sequence when reply is received</span>
-                  </label>
+                    {/* Day selector & delete */}
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex gap-1.5 flex-wrap flex-1">
+                        {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => {
+                          const isActive = selectedDays.includes(day);
+                          return (
+                            <button
+                              key={day}
+                              type="button"
+                              onClick={() => toggleDay(day)}
+                              className={`w-15 py-2 text-[11px] font-medium rounded-md border transition-all cursor-pointer text-center ${isActive
+                                ? 'bg-[#D0DCFF] dark:bg-primary/20 text-[#3666EE] dark:text-blue-400 border-primary'
+                                : 'bg-white dark:bg-slate-900 text-[#B9B9C3] dark:text-slate-500 border-[#D0D0D0] dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700'
+                                }`}
+                            >
+                              {day.toUpperCase()}
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedDays([])}
+                        className="p-2 border border-slate-200 dark:border-slate-800 hover:border-rose-300 dark:hover:border-rose-800 rounded-lg text-slate-400 dark:text-slate-500 hover:text-rose-500 transition-colors cursor-pointer shrink-0"
+                      >
+                        <Trash2 className="size-4" />
+                      </button>
+                    </div>
+
+                    {/* Time range & timezone */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {/* Time Range */}
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500">
+                          <Clock className="size-4 text-[#3666EE]" />
+                        </span>
+                        <input
+                          type="text"
+                          value={timeRange}
+                          onChange={(e) => setTimeRange(e.target.value)}
+                          className="w-full pl-9 pr-3 py-2.5 bg-white dark:bg-slate-900 border border-[#D8D6DE] dark:border-slate-800 rounded-lg text-sm text-[#444050] dark:text-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                          placeholder="11:30 AM - 04:00 PM"
+                        />
+                      </div>
+
+                      {/* Timezone */}
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={timezoneName}
+                          onChange={(e) => setTimezoneName(e.target.value)}
+                          className="w-full px-3 py-2.5 bg-white dark:bg-slate-900 border border-[#D8D6DE] dark:border-slate-800 rounded-lg text-sm text-[#444050] dark:text-slate-200 font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                          placeholder="USA Timezone"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Add New Window */}
+                    <div>
+                      <button
+                        type="button"
+                        className="flex items-center gap-1.5 text-sm font-normal text-primary hover:text-[#254bce] transition-colors cursor-pointer"
+                      >
+                        <Plus className="size-3.5 stroke-[2.5]" />
+                        Add New Window
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Right Column: AI Assist (Optional) */}
+                  <div className="border border-[#EBE9F1] dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 flex flex-col min-h-[220px]">
+
+                    {/* Header */}
+                    <div className="flex items-center justify-between gap-3 p-5 border-b border-[#F0F0F0]">
+                      <div className="flex flex-col gap-2">
+                        <div class="flex items-center gap-3">
+                          <div className="size-10 bg-linear-to-r from-grideant-2 from-30% to-grideant-1 via-100% text-white rounded-sm flex items-center justify-center shrink-0">
+                            <Bot className="size-5" />
+                          </div>
+                          <div className="space-y-0.5">
+                            <div className="flex items-center gap-1.5">
+                              <h4 className="text-base font-semibold text-[#444050] dark:text-slate-100">AI Assist</h4>
+                              <span className="text-sm text-[#6D6B77] dark:text-slate-500 font-normal uppercase tracking-wider">Optional</span>
+                            </div>
+                          </div>
+                        </div>
+                        <p className="text-xs text-[#444050] dark:text-slate-500 leading-normal">Define when the campaign runs</p>
+                      </div>
+                      <button
+                        type="button"
+                        className="px-4 py-2 bg-primary hover:bg-[#254bce] text-white text-sm font-medium rounded-md transition-colors cursor-pointer"
+                      >
+                        Train AI
+                      </button>
+                    </div>
+
+                    <div className="flex flex-col gap-4 p-5">
+                      {/* Row 1: Auto message */}
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-start gap-3">
+                          <div className="text-primary mt-1">
+                            <MessageCircleMore className="size-6" />
+                          </div>
+                          <div className="space-y-0.5">
+                            <h5 className="text-base font-medium text-[#444050] dark:text-slate-200">Auto message after reply detected</h5>
+                            <p className="text-xs text-[#444050] dark:text-slate-500 leading-normal">AI auto-replies to leads who message you back</p>
+                          </div>
+                        </div>
+
+                        {/* Toggle */}
+                        <label className="relative inline-flex items-center cursor-pointer select-none">
+                          <input
+                            type="checkbox"
+                            checked={aiAssistAutoMessage}
+                            onChange={(e) => setAiAssistAutoMessage(e.target.checked)}
+                            className="sr-only peer"
+                          />
+                          <div className="w-10 h-6 bg-[#CACACA] dark:bg-slate-800 rounded-full peer peer-checked:after:translate-x-3 after:content-[''] after:absolute after:top-1 after:left-1.5 after:bg-white after:rounded-full after:size-4 after:transition-all peer-checked:bg-[#00C875] dark:peer-checked:bg-[#00C875]"></div>
+                        </label>
+                      </div>
+
+                      {/* Row 2: Auto handle */}
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-start gap-3">
+                          <div className="mt-1">
+                            <svg width="20" height="20" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M8.0625 3.9375H8.4375V1.08476C8.4375 0.79632 8.67135 0.5625 8.95972 0.5625C9.105 0.5625 9.24368 0.622965 9.34245 0.72939L13.8073 5.5377C13.9714 5.71433 14.0625 5.94645 14.0625 6.1875C14.0625 6.42855 13.9714 6.66067 13.8073 6.8373L9.34245 11.6456C9.24368 11.7521 9.105 11.8125 8.95972 11.8125C8.67135 11.8125 8.4375 11.5786 8.4375 11.2903V8.4375C4.27166 8.4375 2.02266 11.4497 1.45649 12.326C1.36303 12.4707 1.20535 12.5625 1.03313 12.5625C0.773205 12.5625 0.5625 12.3518 0.5625 12.0919V11.4375C0.5625 7.2954 3.92036 3.9375 8.0625 3.9375Z" stroke="#3666EE" stroke-width="1.125" stroke-linejoin="round" />
+                            </svg>
+                          </div>
+                          <div className="space-y-0.5">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <h5 className="text-base font-medium text-[#444050] dark:text-slate-200">Auto handle leads after</h5>
+                              <input
+                                type="text"
+                                value={aiAssistFollowUps}
+                                onChange={(e) => setAiAssistFollowUps(e.target.value)}
+                                className="w-8 h-6 text-center border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-md text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                              />
+                              <h5 className="text-base font-medium text-[#444050] dark:text-slate-200">Follow-ups</h5>
+                            </div>
+                            <p className="text-xs text-[#444050] dark:text-slate-500 leading-normal">AI takes over after two follow-ups.</p>
+                          </div>
+                        </div>
+
+                        {/* Toggle */}
+                        <label className="relative inline-flex items-center cursor-pointer select-none">
+                          <input
+                            type="checkbox"
+                            checked={aiAssistAutoHandle}
+                            onChange={(e) => setAiAssistAutoHandle(e.target.checked)}
+                            className="sr-only peer"
+                          />
+                          <div className="w-10 h-6 bg-[#CACACA] dark:bg-slate-800 rounded-full peer peer-checked:after:translate-x-3 after:content-[''] after:absolute after:top-1 after:left-1.5 after:bg-white after:rounded-full after:size-4 after:transition-all peer-checked:bg-[#00C875] dark:peer-checked:bg-[#00C875]"></div>
+                        </label>
+                      </div>
+                    </div>
+
+                  </div>
 
                 </div>
-
+              </div>
+            </div>
+            {/* Zapier Integration Box */}
+            <div className="border border-[#EBE9F1] dark:border-slate-800 overflow-hidden">
+              {/* Header */}
+              <div className="bg-[#EDF2FE] dark:bg-blue-950/20 px-5 py-4 flex items-center gap-2">
+                <label className="flex items-center gap-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={triggerZapier}
+                    onChange={(e) => setTriggerZapier(e.target.checked)}
+                    className="rounded border-slate-350 dark:border-slate-700 text-primary focus:ring-primary/30 size-4.5 cursor-pointer accent-primary"
+                  />
+                  <span className="text-base font-medium text-[#5E5873] dark:text-slate-200">
+                    Select events to trigger zapier
+                  </span>
+                </label>
+                <Info className="size-4 text-[#5E5873] dark:text-slate-500" />
               </div>
 
+              {/* Body */}
+              <div className="bg-white dark:bg-slate-900 p-5">
+                <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+                  {/* Event 1 */}
+                  <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={zapierEvents.responseReceived}
+                      onChange={(e) => setZapierEvents({ ...zapierEvents, responseReceived: e.target.checked })}
+                      className="rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary/30 size-4.5 cursor-pointer accent-primary"
+                    />
+                    <span className="text-base font-medium text-[#5E5873] dark:text-slate-300">
+                      Response received
+                    </span>
+                  </label>
+
+                  {/* Event 2 */}
+                  <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={zapierEvents.inviteSent}
+                      onChange={(e) => setZapierEvents({ ...zapierEvents, inviteSent: e.target.checked })}
+                      className="rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary/30 size-4.5 cursor-pointer accent-primary"
+                    />
+                    <span className="text-base font-medium text-[#5E5873] dark:text-slate-300">
+                      Invite sent
+                    </span>
+                  </label>
+
+                  {/* Event 3 */}
+                  <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={zapierEvents.invitationAccepted}
+                      onChange={(e) => setZapierEvents({ ...zapierEvents, invitationAccepted: e.target.checked })}
+                      className="rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary/30 size-4.5 cursor-pointer accent-primary"
+                    />
+                    <span className="text-base font-medium text-[#5E5873] dark:text-slate-300">
+                      Invitation accepted
+                    </span>
+                  </label>
+
+                  {/* Event 4 */}
+                  <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={zapierEvents.invitationWithdrawn}
+                      onChange={(e) => setZapierEvents({ ...zapierEvents, invitationWithdrawn: e.target.checked })}
+                      className="rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary/30 size-4.5 cursor-pointer accent-primary"
+                    />
+                    <span className="text-base font-medium text-[#5E5873] dark:text-slate-300">
+                      Invitation withdrawn
+                    </span>
+                  </label>
+
+                  {/* Event 5 */}
+                  <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={zapierEvents.followupSent}
+                      onChange={(e) => setZapierEvents({ ...zapierEvents, followupSent: e.target.checked })}
+                      className="rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary/30 size-4.5 cursor-pointer accent-primary"
+                    />
+                    <span className="text-base font-medium text-[#5E5873] dark:text-slate-300">
+                      Followup Sent
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="bg-white dark:bg-slate-800/40 px-5 py-3.5 border-t border-[#EDF2FE] dark:border-slate-800 flex flex-wrap items-center gap-3">
+                <span className="text-xs font-medium text-[#5E5873] uppercase tracking-wider">Works With</span>
+
+                {/* Zapier badge */}
+                <div className="flex items-center gap-4 px-3 py-1 bg-white dark:bg-slate-800 border border-[#E7EDF6] dark:border-slate-700/60 rounded-xs">
+                  <img src={zapier} alt="Zapier" width={38} height={18} />
+                  <span className="text-[#E7EDF6] dark:text-slate-700">|</span>
+                  <img src={n8n} alt="n8n" width={46} height={23} />
+                  <span className="text-[#E7EDF6] dark:text-slate-700">|</span>
+                  <img src={webhooks} alt="webhooks" width={55} height={15} />
+                </div>
+              </div>
             </div>
+
           </div>
         )}
 
         {/* STEP 4: STATS / REVIEW & LAUNCH */}
         {currentStep === 4 && (
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">Review & Launch Campaign</h3>
-              <p className="text-xs text-slate-455 dark:text-slate-450 font-normal mt-1">Provide a name, subject line, and verify final details before launching.</p>
-            </div>
+          isLaunched ? (
+            /* Dashboard view (second image) */
+            <div className="space-y-6 animate-fade-in text-slate-800 dark:text-slate-100">
+              {/* Filters Toolbar */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                {/* Dropdown */}
+                <div className="relative w-full sm:w-64">
+                  <select className="appearance-none bg-white dark:bg-slate-900 pl-4 pr-10 py-2.5 border border-[#D8D6DE] dark:border-slate-800 rounded-md text-sm font-medium text-[#474055] dark:text-slate-200 focus:outline-hidden cursor-pointer shadow-xs select-none w-full">
+                    <option value="all">All</option>
+                  </select>
+                  <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-              {/* Form Input Column */}
-              <div className="md:col-span-2 space-y-4">
-
-                {/* Campaign Name */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">Campaign Name</label>
+                {/* Search Input */}
+                <div className="relative w-full sm:w-64">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
                     type="text"
-                    placeholder="E.g., Q3 Enterprise Outreach"
-                    value={campaignDetails.name}
-                    onChange={(e) => {
-                      setCampaignDetails({ ...campaignDetails, name: e.target.value });
-                      if (errors.name) setErrors({ ...errors, name: '' });
-                    }}
-                    className={`w-full px-4 py-2.5 bg-white dark:bg-slate-900 border rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue ${errors.name ? 'border-rose-500 ring-2 ring-rose-500/25' : 'border-slate-200 dark:border-slate-800'
-                      }`}
+                    placeholder="Search"
+                    className="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-[#D8D6DE] dark:border-slate-800 rounded-md text-sm font-medium text-[#474055] dark:text-slate-150 focus:outline-hidden"
                   />
-                  {errors.name && <p className="text-xs font-semibold text-rose-500 mt-1">{errors.name}</p>}
-                </div>
-
-                {/* Channel & Status */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">Channel Type</label>
-                    <select
-                      value={campaignDetails.channel}
-                      onChange={(e) => setCampaignDetails({ ...campaignDetails, channel: e.target.value })}
-                      className="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden"
-                    >
-                      <option value="Email">Email</option>
-                      <option value="SMS">SMS</option>
-                      <option value="Social">Social / LinkedIn</option>
-                      <option value="Push">Push Notifications</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">Initial Status</label>
-                    <select
-                      value={campaignDetails.status}
-                      onChange={(e) => setCampaignDetails({ ...campaignDetails, status: e.target.value })}
-                      className="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden"
-                    >
-                      <option value="Active">Active</option>
-                      <option value="Draft">Draft</option>
-                      <option value="Scheduled">Scheduled</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Subject Line */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">Subject Line</label>
-                  <input
-                    type="text"
-                    placeholder="E.g., Quick question regarding your pipeline..."
-                    value={campaignDetails.subject}
-                    onChange={(e) => {
-                      setCampaignDetails({ ...campaignDetails, subject: e.target.value });
-                      if (errors.subject) setErrors({ ...errors, subject: '' });
-                    }}
-                    className={`w-full px-4 py-2.5 bg-white dark:bg-slate-900 border rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden focus:ring-2 focus:ring-brand-blue/30 focus:border-brand-blue ${errors.subject ? 'border-rose-500 ring-2 ring-rose-500/25' : 'border-slate-200 dark:border-slate-800'
-                      }`}
-                  />
-                  {errors.subject && <p className="text-xs font-semibold text-rose-500 mt-1">{errors.subject}</p>}
-                </div>
-
-                {/* Description */}
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">Campaign Description</label>
-                  <textarea
-                    placeholder="Brief description of the workflow goal..."
-                    value={campaignDetails.description}
-                    onChange={(e) => setCampaignDetails({ ...campaignDetails, description: e.target.value })}
-                    rows="3"
-                    className="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md text-sm text-slate-800 dark:text-slate-150 focus:outline-hidden"
-                  />
-                </div>
-
-              </div>
-
-              {/* Sidebar Summary Card */}
-              <div className="bg-slate-50/50 dark:bg-slate-800/20 border border-slate-150 dark:border-slate-800/80 rounded-xl p-5 space-y-4">
-                <h4 className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider pb-2 border-b border-slate-200/50 dark:border-slate-800">Campaign Summary</h4>
-
-                <div className="space-y-3">
-                  <div className="text-[11px] text-slate-400 dark:text-slate-500 leading-tight">
-                    Workflow Mode: <span className="font-bold text-slate-700 dark:text-slate-300 block text-xs mt-0.5 capitalize">{mode}</span>
-                  </div>
-                  <div className="text-[11px] text-slate-400 dark:text-slate-500 leading-tight">
-                    Import Method: <span className="font-bold text-slate-700 dark:text-slate-300 block text-xs mt-0.5 uppercase">{selectedMethod}</span>
-                  </div>
-                  <div className="text-[11px] text-slate-400 dark:text-slate-500 leading-tight">
-                    Sender Account: <span className="font-bold text-slate-700 dark:text-slate-300 block text-xs mt-0.5">John Doe</span>
-                  </div>
-                  <div className="text-[11px] text-slate-400 dark:text-slate-500 leading-tight">
-                    Schedule Active: <span className="font-bold text-slate-700 dark:text-slate-300 block text-xs mt-0.5">{selectedDays.join(', ')} (9AM - 5PM)</span>
-                  </div>
-                  <div className="text-[11px] text-slate-400 dark:text-slate-500 leading-tight">
-                    Daily Capacity: <span className="font-bold text-slate-700 dark:text-slate-300 block text-xs mt-0.5">{dailyLimits.connections} Con / {dailyLimits.emails} Emails</span>
-                  </div>
-                </div>
-
-                <div className="flex gap-2 items-center text-[10px] text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 p-2.5 rounded-md border border-emerald-100 dark:border-emerald-900/40">
-                  <Sparkles className="size-4 flex-shrink-0" />
-                  <span>Ready to deploy and run automatically!</span>
                 </div>
               </div>
 
+              {/* Main Grid Layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                {/* Left Column: Tech Founder details, Overview, Sub-grids */}
+                <div className="lg:col-span-2 space-y-6">
+
+                  {/* Card 1: Tech Founder Details & Progress */}
+                  <div className="bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-lg p-6 space-y-6 shadow-xs">
+                    {/* Header row */}
+                    <div className="flex flex-wrap justify-between items-center gap-4">
+                      <div className="flex flex-col items-center gap-3">
+                        <h3 className="flex items-center gap-3 font-semibold text-[#444050] dark:text-slate-150">
+                          <Megaphone className="size-5 text-primary" />
+                          Tech Founder</h3>
+                        <div className="flex gap-1.5">
+                          <span className="bg-[#EDF2FC] dark:bg-primary/10 text-[#5269AB] dark:text-blue-450 px-2.5 py-1 rounded-sm text-xs font-bold">LinkedIn</span>
+                          <span className="bg-[#EDF2FC] dark:bg-primary/10 text-[#5269AB] dark:text-blue-450 px-2.5 py-1 rounded-sm text-xs font-bold">Email</span>
+                        </div>
+                      </div>
+
+                      {/* Status & Actions */}
+                      <div className="flex items-center gap-3">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm text-xs font-semibold bg-[#E5F8EE] text-[#549A75] dark:bg-emerald-950/30 dark:text-emerald-450">
+                          <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.66932 7.49693L5.918 0.759761C6.32847 0.232856 7.0979 0.560808 7.0979 1.26268V6.47733C7.0979 6.89775 7.39962 7.23863 7.77185 7.23863H10.3247C10.9047 7.23863 11.2138 8.01105 10.8307 8.50283L5.582 15.24C5.17153 15.7669 4.4021 15.439 4.4021 14.7371V9.52245C4.4021 9.102 4.10036 8.76113 3.72815 8.76113H1.17526C0.595333 8.76113 0.286205 7.9887 0.66932 7.49693Z" stroke="#549A75" stroke-linecap="round" stroke-linejoin="round" />
+                          </svg>
+                          Running
+                        </span>
+                        <button className="text-[#334155] transition-colors cursor-pointer">
+                          <Pause className="size-4 text-[#5E5873] dark:text-slate-350" />
+                        </button>
+                        <button className="text-[#334155] transition-colors cursor-pointer">
+                          <SquarePen className="size-4 text-[#5E5873] dark:text-slate-350" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Progress Bar Section */}
+                    <div className="bg-[#F8F7FA] p-5 rounded-md">
+                      {/* Progress Bar */}
+                      <div className="w-full bg-white dark:bg-slate-850 h-2.5 rounded-full overflow-hidden mb-3">
+                        <div className="bg-primary h-full rounded-full transition-all duration-500" style={{ width: '37%' }}></div>
+                      </div>
+                      {/* Info Row */}
+                      <div className="flex justify-between items-center text-xs text-[#5E5873] dark:text-slate-400 font-semibold">
+                        <div className="flex items-center gap-3">
+                          <span>Created: 8 Jan, 2026</span>
+                          <span className="text-slate-300">|</span>
+                          <span className="inline-flex items-center gap-1 text-[#28C76F] bg-[#E8F9EE] dark:bg-emerald-950/20 px-2 py-0.5 rounded-xs text-[10px]">
+                            <Sparkles className="size-3" /> CRM Connected
+                          </span>
+                        </div>
+                        <div>74 / 200 prospects processed</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card 2: Campaign Overview (5 metric columns) */}
+                  <div className="bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-lg shadow-xs overflow-hidden">
+                    <div className="p-5 border-b border-[#E7EDF6] dark:border-slate-800 flex justify-between items-center">
+                      <h3 className="text-base font-bold text-[#444050] dark:text-slate-150">Campaign Overview</h3>
+                      <div className="flex bg-[#F8F8F8] dark:bg-slate-805 p-0.5 rounded-md border border-slate-200 dark:border-slate-800 text-xs">
+                        <button className="px-3 py-1 bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 shadow-xs font-semibold rounded-sm text-slate-700 dark:text-slate-350">LinkedIn</button>
+                        <button className="px-3 py-1 font-semibold text-slate-550 dark:text-slate-450">Email</button>
+                      </div>
+                    </div>
+
+                    {/* Grid of metrics */}
+                    <div className="grid grid-cols-1 sm:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-[#E7EDF6] dark:divide-slate-800">
+                      {/* Stat 1: New Leads */}
+                      <div className="flex flex-col justify-between min-h-[160px] bg-white dark:bg-slate-900">
+                        <div className="p-5 space-y-2">
+                          <div className="text-xs font-bold text-[#5E5873] dark:text-slate-400 uppercase tracking-wider">New Leads</div>
+                          <div className="text-2xl font-bold text-[#444050] dark:text-slate-100">1,628</div>
+                        </div>
+                        <div className="h-20 bg-[#6F52ED] w-full rounded-b-none"></div>
+                      </div>
+
+                      {/* Stat 2: Invites Sent */}
+                      <div className="flex flex-col justify-between min-h-[160px] bg-white dark:bg-slate-900">
+                        <div className="p-5 space-y-2">
+                          <div className="flex items-center justify-between gap-1">
+                            <span className="text-xs font-bold text-[#5E5873] dark:text-slate-400 uppercase tracking-wider text-[11px]">Invites Sent</span>
+                            <Info className="size-3.5 text-slate-400 cursor-pointer" />
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl font-bold text-[#444050] dark:text-slate-100">988</span>
+                            <span className="bg-[#E8F9EE] text-[#28C76F] dark:bg-emerald-950/20 dark:text-emerald-450 text-[10px] font-bold px-1.5 py-0.5 rounded-sm">61%</span>
+                          </div>
+                        </div>
+                        <div className="h-20 bg-slate-50 dark:bg-slate-850/20 w-full flex items-end">
+                          <div className="bg-[#8392A5] opacity-50 w-full" style={{ height: '61%' }}></div>
+                        </div>
+                      </div>
+
+                      {/* Stat 3: Invites Accepted */}
+                      <div className="flex flex-col justify-between min-h-[160px] bg-white dark:bg-slate-900">
+                        <div className="p-5 space-y-2">
+                          <div className="flex items-center justify-between gap-1">
+                            <span className="text-xs font-bold text-[#5E5873] dark:text-slate-400 uppercase tracking-wider text-[11px]">Invites Accepted</span>
+                            <Info className="size-3.5 text-slate-400 cursor-pointer" />
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl font-bold text-[#444050] dark:text-slate-100">507</span>
+                            <span className="bg-[#FFF3E8] text-[#FF9F43] dark:bg-amber-950/20 dark:text-amber-450 text-[10px] font-bold px-1.5 py-0.5 rounded-sm">49%</span>
+                          </div>
+                        </div>
+                        <div className="h-20 bg-slate-50 dark:bg-slate-850/20 w-full flex items-end">
+                          <div className="bg-[#20C997] opacity-25 w-full" style={{ height: '49%' }}></div>
+                        </div>
+                      </div>
+
+                      {/* Stat 4: Messages Sent */}
+                      <div className="flex flex-col justify-between min-h-[160px] bg-white dark:bg-slate-900">
+                        <div className="p-5 space-y-2">
+                          <div className="text-xs font-bold text-[#5E5873] dark:text-slate-400 uppercase tracking-wider text-[11px]">Messages Sent</div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl font-bold text-[#444050] dark:text-slate-100">460</span>
+                            <span className="bg-[#E8F9EE] text-[#28C76F] dark:bg-emerald-950/20 dark:text-emerald-450 text-[10px] font-bold px-1.5 py-0.5 rounded-sm">91%</span>
+                          </div>
+                        </div>
+                        <div className="h-20 bg-slate-50 dark:bg-slate-850/20 w-full flex items-end">
+                          <div className="bg-[#A5D6A7] opacity-60 w-full" style={{ height: '91%' }}></div>
+                        </div>
+                      </div>
+
+                      {/* Stat 5: Replies */}
+                      <div className="flex flex-col justify-between min-h-[160px] bg-white dark:bg-slate-900">
+                        <div className="p-5 space-y-2">
+                          <div className="flex items-center justify-between gap-1">
+                            <span className="text-xs font-bold text-[#5E5873] dark:text-slate-400 uppercase tracking-wider text-[11px]">Replies</span>
+                            <Info className="size-3.5 text-slate-400 cursor-pointer" />
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl font-bold text-[#444050] dark:text-slate-100">202</span>
+                            <span className="bg-[#FFF3E8] text-[#FF9F43] dark:bg-amber-950/20 dark:text-amber-450 text-[10px] font-bold px-1.5 py-0.5 rounded-sm">44%</span>
+                          </div>
+                        </div>
+                        <div className="h-20 bg-slate-50 dark:bg-slate-850/20 w-full flex items-end">
+                          <div className="bg-[#81C784] opacity-35 w-full" style={{ height: '44%' }}></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Row with two sub-cards: Campaign Actions & Reply Performance */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Card 3: Campaign Actions */}
+                    <div className="bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-lg p-5 flex flex-col justify-between min-h-[300px] shadow-xs">
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-805 pb-3">
+                          <div>
+                            <h3 className="text-base font-bold text-[#444050] dark:text-slate-150">Campaign Actions</h3>
+                            <p className="text-[11px] text-[#6E6B7B] dark:text-slate-450">Execution stats & engagement signals</p>
+                          </div>
+                          <div className="flex bg-[#F8F8F8] dark:bg-slate-805 p-0.5 rounded-md border border-slate-200 dark:border-slate-800 text-[10px]">
+                            <button className="px-2 py-0.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs font-semibold rounded-sm text-slate-700 dark:text-slate-350">LinkedIn</button>
+                            <button className="px-2 py-0.5 font-semibold text-slate-550 dark:text-slate-450">Email</button>
+                          </div>
+                        </div>
+
+                        {/* Layout grid of list metrics */}
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-3.5 text-xs">
+                          {/* Column 1 */}
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <span className="font-semibold text-slate-850 dark:text-slate-300">Remaining Leads:</span>
+                              <span className="font-bold text-[#444050] dark:text-slate-100">110</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="font-semibold text-slate-855 dark:text-slate-300">Follow-up message:</span>
+                              <span className="font-bold text-[#444050] dark:text-slate-100">10</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="font-semibold text-slate-850 dark:text-slate-300">InMails Sent:</span>
+                              <span className="font-bold text-[#444050] dark:text-slate-100">20</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="font-semibold text-slate-850 dark:text-slate-300">Emails:</span>
+                              <span className="font-bold text-[#444050] dark:text-slate-100">89</span>
+                            </div>
+                          </div>
+                          {/* Column 2 */}
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <span className="font-semibold text-slate-850 dark:text-slate-300">Profile Viewed:</span>
+                              <span className="font-bold text-[#444050] dark:text-slate-100">45</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="font-semibold text-slate-850 dark:text-slate-300">Profile Followed:</span>
+                              <span className="font-bold text-[#444050] dark:text-slate-100">140</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="font-semibold text-slate-850 dark:text-slate-300">Skills Endorsed:</span>
+                              <span className="font-bold text-[#444050] dark:text-slate-100">50</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="font-semibold text-slate-850 dark:text-slate-300">Comments Added:</span>
+                              <span className="font-bold text-[#444050] dark:text-slate-100">54</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Team Avatars */}
+                      <div className="border-t border-slate-100 dark:border-slate-805 pt-4 flex items-center gap-3">
+                        <span className="text-xs font-bold text-slate-655 dark:text-slate-400">Team:</span>
+                        <div className="flex -space-x-2 overflow-hidden">
+                          <img
+                            className="inline-block size-6.5 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover"
+                            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                            alt="Edgar Jones"
+                          />
+                          <img
+                            className="inline-block size-6.5 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover"
+                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                            alt="Sarah Jenkins"
+                          />
+                          <img
+                            className="inline-block size-6.5 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover"
+                            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                            alt="Michael Brown"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card 4: Reply Performance */}
+                    <div className="bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-lg p-5 flex flex-col justify-between min-h-[300px] shadow-xs">
+                      <div className="space-y-4">
+                        <div className="border-b border-slate-100 dark:border-slate-805 pb-3">
+                          <h3 className="text-base font-bold text-[#444050] dark:text-slate-150">Reply Performance</h3>
+                          <p className="text-[11px] text-slate-450 dark:text-slate-400">Top reply channel</p>
+                        </div>
+
+                        {/* Progress bars list */}
+                        <div className="space-y-3.5">
+                          {/* Channel 1: Follow-up */}
+                          <div className="space-y-1">
+                            <div className="flex justify-between items-center text-xs font-semibold text-slate-700 dark:text-slate-350">
+                              <span>Follow-up</span>
+                              <span className="text-primary font-bold">80%</span>
+                            </div>
+                            <div className="w-full bg-[#EAEFFF] dark:bg-slate-850 h-2 rounded-full overflow-hidden">
+                              <div className="bg-primary h-full rounded-full" style={{ width: '80%' }}></div>
+                            </div>
+                          </div>
+
+                          {/* Channel 2: InMail */}
+                          <div className="space-y-1">
+                            <div className="flex justify-between items-center text-xs font-semibold text-slate-700 dark:text-slate-350">
+                              <span>InMail</span>
+                              <span className="text-[#00C875] font-bold">32%</span>
+                            </div>
+                            <div className="w-full bg-[#EAEFFF] dark:bg-slate-850 h-2 rounded-full overflow-hidden">
+                              <div className="bg-[#00C875] h-full rounded-full" style={{ width: '32%' }}></div>
+                            </div>
+                          </div>
+
+                          {/* Channel 3: Email */}
+                          <div className="space-y-1">
+                            <div className="flex justify-between items-center text-xs font-semibold text-slate-700 dark:text-slate-350">
+                              <span>Email</span>
+                              <span className="text-rose-500 font-bold">11%</span>
+                            </div>
+                            <div className="w-full bg-[#EAEFFF] dark:bg-slate-850 h-2 rounded-full overflow-hidden">
+                              <div className="bg-rose-500 h-full rounded-full" style={{ width: '11%' }}></div>
+                            </div>
+                          </div>
+
+                          {/* Channel 4: Connection Message */}
+                          <div className="space-y-1">
+                            <div className="flex justify-between items-center text-xs font-semibold text-slate-700 dark:text-slate-350">
+                              <span>Connection Message</span>
+                              <span className="text-primary font-bold">79%</span>
+                            </div>
+                            <div className="w-full bg-[#EAEFFF] dark:bg-slate-850 h-2 rounded-full overflow-hidden">
+                              <div className="bg-primary h-full rounded-full" style={{ width: '79%' }}></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* Right Column: Reply Analysis & Recent Activity */}
+                <div className="space-y-6">
+
+                  {/* Card 5: Reply Analysis */}
+                  <div className="bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-lg p-5 shadow-xs">
+                    <h3 className="text-base font-bold text-[#444050] dark:text-slate-150 border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">Reply Analysis</h3>
+
+                    {/* Gauge Visualization */}
+                    <div className="flex flex-col items-center justify-center py-2">
+                      <div className="relative size-32 flex items-center justify-center">
+                        {/* Semicircular ticks chart */}
+                        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                          {/* Background arc */}
+                          <circle cx="50" cy="50" r="40" stroke="#E2E8F0" strokeWidth="6" fill="none" strokeDasharray="126 251" strokeLinecap="round" className="dark:stroke-slate-800" />
+                          {/* Filled blue arc representing 80% */}
+                          <circle cx="50" cy="50" r="40" stroke="#3666EE" strokeWidth="6" fill="none" strokeDasharray="101 251" strokeLinecap="round" />
+                        </svg>
+                        {/* Inner Text overlay */}
+                        <div className="absolute flex flex-col items-center justify-center">
+                          <span className="text-xl font-bold text-[#444050] dark:text-slate-100">80%</span>
+                          <span className="text-[9px] font-semibold text-slate-500 dark:text-slate-400">Discussions</span>
+                        </div>
+                      </div>
+
+                      {/* Results Table list */}
+                      <div className="w-full mt-4 border-t border-slate-100 dark:border-slate-800 pt-3 text-xs font-semibold">
+                        <div className="flex justify-between items-center text-slate-655 dark:text-slate-400 mb-2">
+                          <span>Status</span>
+                          <span>Results</span>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="inline-flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
+                              <span className="size-2 rounded-full bg-primary"></span> Positive
+                            </span>
+                            <span className="font-bold text-[#444050] dark:text-slate-150">12%</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="inline-flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
+                              <span className="size-2 rounded-full bg-[#FF9F43]"></span> Neutral
+                            </span>
+                            <span className="font-bold text-[#444050] dark:text-slate-150">14%</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="inline-flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
+                              <span className="size-2 rounded-full bg-rose-500"></span> Negative
+                            </span>
+                            <span className="font-bold text-[#444050] dark:text-slate-150">8%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card 6: Recent Campaign Activity */}
+                  <div className="bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-lg p-5 flex flex-col justify-between min-h-[420px] shadow-xs">
+                    <div className="space-y-4">
+                      <h3 className="text-base font-bold text-[#444050] dark:text-slate-150 border-b border-slate-100 dark:border-slate-800 pb-3">Recent Campaign Activity</h3>
+
+                      {/* Activity List Timeline */}
+                      <div className="relative pl-6 space-y-6">
+                        {/* Timeline Line */}
+                        <div className="absolute left-[11px] top-2.5 bottom-2.5 w-0.5 bg-[#EAEFFF] dark:bg-slate-800"></div>
+
+                        {/* Item 1: Campaign Started */}
+                        <div className="relative">
+                          <span className="absolute -left-6 top-0.5 size-6.5 rounded-full bg-primary text-white flex items-center justify-center">
+                            <Rocket className="size-3" />
+                          </span>
+                          <div className="flex flex-col text-xs">
+                            <span className="text-slate-400 font-semibold">09:14 AM</span>
+                            <span className="font-bold text-[#444050] dark:text-slate-200 mt-0.5">Campaign started</span>
+                            <span className="text-slate-500 dark:text-slate-400 font-normal">by <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline">Aman S.</a></span>
+                          </div>
+                        </div>
+
+                        {/* Item 2: Reply Received */}
+                        <div className="relative">
+                          <span className="absolute -left-6 top-0.5 size-6.5 rounded-full bg-indigo-550 bg-indigo-500 text-white flex items-center justify-center">
+                            <MessageSquare className="size-3" />
+                          </span>
+                          <div className="flex flex-col text-xs">
+                            <span className="text-slate-400 font-semibold">10:30 AM</span>
+                            <span className="font-bold text-[#444050] dark:text-slate-200 mt-0.5">Reply received</span>
+                            <span className="text-slate-500 dark:text-slate-400 font-normal">from <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline">Suresh K.</a></span>
+                          </div>
+                        </div>
+
+                        {/* Item 3: Follow-up message sent */}
+                        <div className="relative">
+                          <span className="absolute -left-6 top-0.5 size-6.5 rounded-full bg-rose-500 text-white flex items-center justify-center">
+                            <Send className="size-3" />
+                          </span>
+                          <div className="flex flex-col text-xs">
+                            <span className="text-slate-400 font-semibold">10:35 AM</span>
+                            <span className="font-bold text-[#444050] dark:text-slate-200 mt-0.5">Follow-up message sent</span>
+                            <span className="text-slate-500 dark:text-slate-400 font-normal">by System</span>
+                          </div>
+                        </div>
+
+                        {/* Item 4: Connection Accepted */}
+                        <div className="relative">
+                          <span className="absolute -left-6 top-0.5 size-6.5 rounded-full bg-[#EAEFFF] text-primary flex items-center justify-center border border-primary/20">
+                            <UserCheck className="size-3" />
+                          </span>
+                          <div className="flex flex-col text-xs">
+                            <span className="text-slate-400 font-semibold">10:35 AM</span>
+                            <span className="font-bold text-[#444050] dark:text-slate-200 mt-0.5">Connection accepted</span>
+                            <span className="text-slate-500 dark:text-slate-400 font-normal">by <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline">Suresh K.</a> (Prospect)</span>
+                          </div>
+                        </div>
+
+                        {/* Item 5: Campaign Paused */}
+                        <div className="relative">
+                          <span className="absolute -left-6 top-0.5 size-6.5 rounded-full bg-amber-505 bg-amber-550 bg-amber-500 text-white flex items-center justify-center">
+                            <Pause className="size-3" />
+                          </span>
+                          <div className="flex flex-col text-xs">
+                            <span className="text-slate-400 font-semibold">10:45 AM</span>
+                            <span className="font-bold text-[#444050] dark:text-slate-200 mt-0.5">Campaign paused</span>
+                            <span className="text-slate-500 dark:text-slate-400 font-normal">by <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline">Aman S.</a></span>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <div className="border-t border-slate-100 dark:border-slate-800 pt-4 mt-6">
+                      <a href="#" onClick={(e) => e.preventDefault()} className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-brand-blue-hover transition-colors">
+                        <ExternalLink className="size-3.5" />
+                        Open Activity Log
+                      </a>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
             </div>
-          </div>
+          ) : (
+            /* No Stats Yet view (first image) */
+            <div className="flex flex-col items-center justify-center py-20 px-4 text-center select-none animate-fade-in bg-white dark:bg-slate-900">
+              {/* Graphic container */}
+              <div className="relative w-64 h-48 mb-6 flex items-center justify-center">
+                <img src={stats} alt="stats" />
+              </div>
+
+              <h3 className="text-[#5E5873] dark:text-slate-200 text-xl font-medium mb-1">No Stats Yet</h3>
+              <p className="text-[#5E5873] dark:text-slate-400 text-sm mb-6 leading-relaxed">
+                Once Campaign is launched, Statistics will be shown here.
+              </p>
+
+              <button
+                type="button"
+                onClick={handleLaunchCampaign}
+                className="flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-[#254bce] text-white text-sm font-normal rounded-md shadow-md shadow-blue-500/10 hover:shadow-blue-500/20 transition-all cursor-pointer"
+              >
+                <Rocket className="size-4" />
+                <span>Launch Campaign</span>
+              </button>
+            </div>
+          )
         )}
 
         {/* footer action buttons */}
-        <div className="flex items-center justify-end gap-4 mt-10">
-          {currentStep === 1 ? '' : <button
-            type="button"
-            onClick={handleBackStep}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-sm bg-slate-100 hover:bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-750 text-sm font-semibold transition-all cursor-pointer"
-          >
-            <ArrowLeft className="size-4" />
-            <span>Back</span>
-          </button>}
+        {currentStep !== 4 && (
+          <>
+            {!isLaunched && (
+              <div className={`flex items-center gap-4 mt-10 ${currentStep === 3 ? 'justify-between' : 'justify-end'}`}>
+                {currentStep === 3 ?
+                  <div className='text-sm text-slate-600 dark:text-slate-300'>
+                    <p>If a lead answers your invite, message, or InMail, we<br />stop sending further steps automatically. <a className='text-primary' href="#">Learn more</a></p>
+                  </div>
+                  : null}
+                <div className='flex items-center justify-end gap-4'>
+                  {currentStep === 1 ? '' : <button
+                    type="button"
+                    onClick={handleBackStep}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-sm text-primary dark:text-slate-300 text-sm font-semibold transition-all cursor-pointer"
+                  >
+                    <CornerDownLeft className="size-4" />
+                    <span>Previous</span>
+                  </button>}
 
-          <button
-            type="button"
-            onClick={handleNextStep}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-sm bg-linear-to-r from-grideant-2 from-30% to-grideant-1 via-100% hover:from-grideant-2 hover:to-grideant-2 text-white text-sm font-semibold shadow-md shadow-blue-500/10 hover:shadow-blue-500/20 transition-all cursor-pointer"
-          >
-            <span>{currentStep === 4 ? 'Launch Campaign' : 'Next'}</span>
-          </button>
-        </div>
+                  <button
+                    type="button"
+                    onClick={handleNextStep}
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-sm bg-linear-to-r from-grideant-2 from-30% to-grideant-1 via-100% hover:from-grideant-2 hover:to-grideant-2 text-white text-sm font-semibold shadow-md shadow-blue-500/10 hover:shadow-blue-500/20 transition-all cursor-pointer"
+                  >
+                    <span>{currentStep === 4 ? 'Launch Campaign' : 'Next'}</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+
+
 
 
 
