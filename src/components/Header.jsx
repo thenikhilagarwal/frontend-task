@@ -31,12 +31,12 @@ export default function Header({ breadcrumbs }) {
                   e.preventDefault();
                   item.onClick();
                 }}
-                className="font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer bg-transparent border-0 p-0 text-left"
+                className="truncate md:w-auto sm:w-20 w-10 font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer bg-transparent border-0 p-0 text-left"
               >
                 {item.label}
               </button>
             ) : (
-              <span className="font-medium text-slate-700 dark:text-slate-300">
+              <span className="font-medium text-slate-700 dark:text-slate-300 truncate sm:w-40 w-10">
                 {item.label}
               </span>
             )}
