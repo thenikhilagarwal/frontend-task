@@ -102,7 +102,7 @@ export default function LookalikeModal({ isOpen, onClose, lists, onCreateList, s
           </form>
         ) : lists.length === 0 ? (
           /* Empty State matching Design Mockup */
-          <div className="flex-1 flex flex-col p-8 justify-center min-h-[300px]">
+          <div className="flex-1 flex flex-col md:p-8 p-4 justify-center min-h-[300px]">
             <div className="flex flex-col items-center justify-center text-center py-6 select-none animate-fade-in">
               <h4 className="text-2xl font-bold text-[#5E5873] dark:text-slate-200">
                 You don't have any leads
@@ -155,7 +155,7 @@ export default function LookalikeModal({ isOpen, onClose, lists, onCreateList, s
                           {/* Radio Selector */}
                           <div className={`size-5 rounded-xs border-2 flex items-center justify-center transition-all ${isSelected ? 'border-primary bg-primary text-white' : 'border-[#F8FAFF] dark:border-slate-700 bg-transparent'
                             }`}>
-                            {isSelected && <Check className="size-3 stroke-[3]" />}
+                            {isSelected && <Check className="size-3 stroke-3" />}
                           </div>
                         </div>
                       );
