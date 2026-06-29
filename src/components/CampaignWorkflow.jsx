@@ -3,6 +3,7 @@ import zapier from '../assets/zapier.png';
 import n8n from '../assets/n8n.png';
 import webhooks from '../assets/webhooks.png';
 import stats from '../assets/stats.png';
+import crm from '../assets/crm.png';
 import {
   ListChecks,
   User,
@@ -37,6 +38,7 @@ import {
   UserCheck,
   ExternalLink
 } from 'lucide-react';
+import SemiCircularProgress from './SemiCircularProgress';
 
 const Linkedin = (props) => (
   <svg
@@ -277,7 +279,7 @@ export default function CampaignWorkflow({
   return (
     <div className="space-y-6 select-none animate-fade-in">
       {/* 1. Horizontal Stepper */}
-      <div className="bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-md px-6 py-4 shadow-xs flex flex-wrap items-center gap-x-5  xl:gap-x-10 gap-y-4">
+      <div className="bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-md md:px-6 px-4 py-4 shadow-xs flex flex-wrap items-center md:gap-x-5 gap-x-3 xl:gap-x-10 gap-y-4">
         {/* Step 1: Define Target Audience */}
         <div className="flex items-center gap-3">
           <div className={`size-10 rounded-lg flex items-center justify-center transition-all ${currentStep === 1
@@ -291,7 +293,7 @@ export default function CampaignWorkflow({
           <div className={`text-base font-medium ${currentStep === 1 ? 'text-[#444050] dark:text-slate-100' : 'text-[#444050] dark:text-slate-400'}`}>Define Target Audience</div>
         </div>
 
-        <ChevronRight className="size-5 text-[#6E6B7B]" />
+        <ChevronRight className="size-5 text-slate-700" />
 
         {/* Step 2: Sender Profiles */}
         <div className="flex items-center gap-3">
@@ -306,7 +308,7 @@ export default function CampaignWorkflow({
           <div className={`text-base font-medium ${currentStep === 2 ? 'text-[#5E5873] dark:text-slate-100' : 'text-[#444050] dark:text-slate-400'}`}>Sender Profiles</div>
         </div>
 
-        <ChevronRight className="size-5 text-[#6E6B7B]" />
+        <ChevronRight className="size-5 text-slate-700" />
 
         {/* Step 3: Settings */}
         <div className="flex items-center gap-3">
@@ -321,13 +323,12 @@ export default function CampaignWorkflow({
           <div className={`text-base font-medium ${currentStep === 3 ? 'text-[#5E5873] dark:text-slate-100' : 'text-[#444050] dark:text-slate-400'}`}>Settings</div>
         </div>
 
-        <ChevronRight className="size-5 text-[#6E6B7B]" />
+        <ChevronRight className="size-5 text-slate-700" />
 
         {/* Step 4: Stats */}
         <div className="flex items-center gap-3">
           <div className={`size-10 rounded-lg flex items-center justify-center transition-all ${currentStep === 4
-            ? 'bg-primary text-white'
-            : 'bg-[#D0DCFF] text-primary'
+            ? 'bg-primary text-white shadow-md shadow-blue-500/20' : currentStep > 4 ? 'bg-[#D0DCFF] text-primary' : 'bg-[#E8E8E8] dark:bg-slate-800 text-slate-400'
             }`}>
             <BarChart3 className="size-5" />
           </div>
@@ -348,7 +349,7 @@ export default function CampaignWorkflow({
             <div className="relative space-y-4">
               {/* Node 1 */}
               <div className="absolute -left-8 top-2 size-5 rounded-full bg-emerald-500 flex items-center justify-center text-white z-10">
-                <Check className="size-3 stroke-[3]" />
+                <Check className="size-3 stroke-3" />
               </div>
 
               {/* Header Bar */}
@@ -363,18 +364,18 @@ export default function CampaignWorkflow({
 
               {/* Cards Content */}
               {importAccordionOpen && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-4 animate-fade-in">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4 animate-fade-in">
                   {/* Method 1: LinkedIn Search */}
                   <div
                     onClick={() => setSelectedMethod('linkedin')}
                     className={`relative p-5 border rounded-xl cursor-pointer transition-all flex flex-col justify-between min-h-[170px] ${selectedMethod === 'linkedin'
-                      ? 'bg-[#F6F8FF] dark:bg-[#F9FBFF] border-[#3666EE] shadow-xs'
+                      ? 'bg-[#F6F8FF] dark:bg-[#F9FBFF] border-primary shadow-xs'
                       : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700'
                       }`}
                   >
                     {selectedMethod === 'linkedin' && (
                       <div className="absolute top-3 right-3 size-5 bg-primary text-white rounded-sm flex items-center justify-center shadow-xs">
-                        <Check className="size-3 stroke-[3]" />
+                        <Check className="size-3 stroke-3" />
                       </div>
                     )}
                     <div className="space-y-4">
@@ -400,7 +401,7 @@ export default function CampaignWorkflow({
                   >
                     {selectedMethod === 'csv' && (
                       <div className="absolute top-3 right-3 size-5 bg-brand-blue text-white rounded-md flex items-center justify-center shadow-xs">
-                        <Check className="size-3 stroke-[3]" />
+                        <Check className="size-3 stroke-3" />
                       </div>
                     )}
                     <div className="space-y-4">
@@ -429,7 +430,7 @@ export default function CampaignWorkflow({
                   >
                     {selectedMethod === 'list' && (
                       <div className="absolute top-3 right-3 size-5 bg-brand-blue text-white rounded-md flex items-center justify-center shadow-xs">
-                        <Check className="size-3 stroke-[3]" />
+                        <Check className="size-3 stroke-3" />
                       </div>
                     )}
                     <div className="space-y-4">
@@ -455,7 +456,7 @@ export default function CampaignWorkflow({
                   >
                     {selectedMethod === 'webhook' && (
                       <div className="absolute top-3 right-3 size-5 bg-brand-blue text-white rounded-md flex items-center justify-center shadow-xs">
-                        <Check className="size-3 stroke-[3]" />
+                        <Check className="size-3 stroke-3" />
                       </div>
                     )}
                     <div className="space-y-4">
@@ -491,7 +492,7 @@ export default function CampaignWorkflow({
                       {selectedMethod === 'webhook' && 'Inbound Webhook Configuration'}
                     </span>
                     {selectedMethod == 'csv' && (
-                      <span className='bg-[#F8F8F8] px-3 py-1 rounded-sm font-semibold text-[#6E6B7B] text-xs'>Step 1 of 2</span>
+                      <span className='bg-[#F8F8F8] px-3 py-1 rounded-sm font-semibold text-slate-700 text-xs'>Step 1 of 2</span>
                     )}
                   </div>
                 </>
@@ -617,7 +618,7 @@ export default function CampaignWorkflow({
                 }}
                 className={`px-5 py-2.5 text-sm font-medium border border-primary transition-all duration-200 rounded-l-md cursor-pointer ${activeSenderTab === 'linkedin'
                   ? 'bg-[#CFDAFE] text-primary dark:bg-primary/20 dark:text-blue-400'
-                  : 'bg-white text-[#3666EE] hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-350'
+                  : 'bg-white text-primary hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-350'
                   }`}
               >
                 LinkedIn Profile
@@ -630,7 +631,7 @@ export default function CampaignWorkflow({
                 }}
                 className={`px-5 py-2.5 text-sm font-medium border-y border-r border-primary transition-all duration-200 rounded-r-lg cursor-pointer ${activeSenderTab === 'email'
                   ? 'bg-[#EAEFFF] text-primary dark:bg-primary/20 dark:text-blue-400'
-                  : 'bg-white text-[#3666EE] hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-350'
+                  : 'bg-white text-primary hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-350'
                   }`}
               >
                 Email Accounts
@@ -899,10 +900,10 @@ export default function CampaignWorkflow({
                 </div>
 
                 {/* Two-Column Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
                   {/* Left Column: Sending Window Configuration */}
-                  <div className="border border-[#EBE9F1] dark:border-slate-800 rounded-lg p-5 bg-white dark:bg-slate-900 space-y-4 flex flex-col justify-between min-h-[220px]">
+                  <div className="border border-[#EBE9F1] dark:border-slate-800 rounded-lg sm:p-5 p-3 bg-white dark:bg-slate-900 space-y-4 flex flex-col justify-between min-h-[220px]">
 
                     {/* Dropdown */}
                     <div className="relative">
@@ -928,8 +929,8 @@ export default function CampaignWorkflow({
                               key={day}
                               type="button"
                               onClick={() => toggleDay(day)}
-                              className={`w-15 py-2 text-[11px] font-medium rounded-md border transition-all cursor-pointer text-center ${isActive
-                                ? 'bg-[#D0DCFF] dark:bg-primary/20 text-[#3666EE] dark:text-blue-400 border-primary'
+                              className={`sm:w-15 w-[48%] py-2 text-[11px] font-medium rounded-md border transition-all cursor-pointer text-center ${isActive
+                                ? 'bg-[#D0DCFF] dark:bg-primary/20 text-primary dark:text-blue-400 border-primary'
                                 : 'bg-white dark:bg-slate-900 text-[#B9B9C3] dark:text-slate-500 border-[#D0D0D0] dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700'
                                 }`}
                             >
@@ -937,14 +938,15 @@ export default function CampaignWorkflow({
                             </button>
                           );
                         })}
-                      </div>
-                      <button
+                        <button
                         type="button"
                         onClick={() => setSelectedDays([])}
-                        className="p-2 border border-slate-200 dark:border-slate-800 hover:border-rose-300 dark:hover:border-rose-800 rounded-lg text-slate-400 dark:text-slate-500 hover:text-rose-500 transition-colors cursor-pointer shrink-0"
+                        className="sm:w-auto w-[48%] p-2 border border-[#D0D0D0] dark:border-slate-800 hover:border-rose-300 dark:hover:border-rose-800 rounded-md text-slate-400 dark:text-slate-500 hover:text-rose-500 transition-colors cursor-pointer shrink-0 flex justify-center"
                       >
                         <Trash2 className="size-4" />
                       </button>
+                      </div>
+                      
                     </div>
 
                     {/* Time range & timezone */}
@@ -952,7 +954,7 @@ export default function CampaignWorkflow({
                       {/* Time Range */}
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500">
-                          <Clock className="size-4 text-[#3666EE]" />
+                          <Clock className="size-4 text-primary" />
                         </span>
                         <input
                           type="text"
@@ -991,9 +993,9 @@ export default function CampaignWorkflow({
                   <div className="border border-[#EBE9F1] dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900 flex flex-col min-h-[220px]">
 
                     {/* Header */}
-                    <div className="flex items-center justify-between gap-3 p-5 border-b border-[#F0F0F0]">
+                    <div className="flex flex-wrap items-center justify-between gap-3 p-5 border-b border-[#F0F0F0]">
                       <div className="flex flex-col gap-2">
-                        <div class="flex items-center gap-3">
+                        <div class="flex flex-wrap items-center gap-3">
                           <div className="size-10 bg-linear-to-r from-grideant-2 from-30% to-grideant-1 via-100% text-white rounded-sm flex items-center justify-center shrink-0">
                             <Bot className="size-5" />
                           </div>
@@ -1017,7 +1019,7 @@ export default function CampaignWorkflow({
                     <div className="flex flex-col gap-4 p-5">
                       {/* Row 1: Auto message */}
                       <div className="flex items-center justify-between gap-4">
-                        <div className="flex items-start gap-3">
+                        <div className="flex flex-wrap items-start gap-3">
                           <div className="text-primary mt-1">
                             <MessageCircleMore className="size-6" />
                           </div>
@@ -1041,7 +1043,7 @@ export default function CampaignWorkflow({
 
                       {/* Row 2: Auto handle */}
                       <div className="flex items-center justify-between gap-4">
-                        <div className="flex items-start gap-3">
+                        <div className="flex flex-wrap items-start gap-3">
                           <div className="mt-1">
                             <svg width="20" height="20" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M8.0625 3.9375H8.4375V1.08476C8.4375 0.79632 8.67135 0.5625 8.95972 0.5625C9.105 0.5625 9.24368 0.622965 9.34245 0.72939L13.8073 5.5377C13.9714 5.71433 14.0625 5.94645 14.0625 6.1875C14.0625 6.42855 13.9714 6.66067 13.8073 6.8373L9.34245 11.6456C9.24368 11.7521 9.105 11.8125 8.95972 11.8125C8.67135 11.8125 8.4375 11.5786 8.4375 11.2903V8.4375C4.27166 8.4375 2.02266 11.4497 1.45649 12.326C1.36303 12.4707 1.20535 12.5625 1.03313 12.5625C0.773205 12.5625 0.5625 12.3518 0.5625 12.0919V11.4375C0.5625 7.2954 3.92036 3.9375 8.0625 3.9375Z" stroke="#3666EE" stroke-width="1.125" stroke-linejoin="round" />
@@ -1252,173 +1254,168 @@ export default function CampaignWorkflow({
                     {/* Progress Bar Section */}
                     <div className="bg-[#F8F7FA] p-5 rounded-md">
                       {/* Progress Bar */}
-                      <div className="w-full bg-white dark:bg-slate-850 h-2.5 rounded-full overflow-hidden mb-3">
-                        <div className="bg-primary h-full rounded-full transition-all duration-500" style={{ width: '37%' }}></div>
+                      <div className="w-full h-3 bg-white rounded-full overflow-hidden mb-3">
+                        <div className="h-full w-[35%] rounded-full bg-[repeating-linear-gradient(45deg,#3b82f6_0px,#3b82f6_10px,#60a5fa_10px,#60a5fa_20px)]"></div>
                       </div>
-                      {/* Info Row */}
-                      <div className="flex justify-between items-center text-xs text-[#5E5873] dark:text-slate-400 font-semibold">
-                        <div className="flex items-center gap-3">
-                          <span>Created: 8 Jan, 2026</span>
+                  {/* Info Row */}
+                      <div className="flex flex-wrap justify-between items-center text-xs text-[#444050] dark:text-slate-400 font-semibold">
+                        <div className="flex flex-wrap items-center gap-3">
+                          <span><span className='font-bold'>Created:</span> 8 Jan, 2026</span>
                           <span className="text-slate-300">|</span>
-                          <span className="inline-flex items-center gap-1 text-[#28C76F] bg-[#E8F9EE] dark:bg-emerald-950/20 px-2 py-0.5 rounded-xs text-[10px]">
-                            <Sparkles className="size-3" /> CRM Connected
+                          <span className="inline-flex items-center gap-2 text-[#549A75] bg-[#E5F8EE] dark:bg-emerald-950/20 px-2 py-0.5 rounded-xs text-[10px]">
+                            <img src={crm} /> CRM Connected
                           </span>
                         </div>
-                        <div>74 / 200 prospects processed</div>
+                        <div className="font-bold text-[#64748B]">74 / 200 prospects processed</div>
                       </div>
                     </div>
                   </div>
 
                   {/* Card 2: Campaign Overview (5 metric columns) */}
-                  <div className="bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-lg shadow-xs overflow-hidden">
-                    <div className="p-5 border-b border-[#E7EDF6] dark:border-slate-800 flex justify-between items-center">
-                      <h3 className="text-base font-bold text-[#444050] dark:text-slate-150">Campaign Overview</h3>
-                      <div className="flex bg-[#F8F8F8] dark:bg-slate-805 p-0.5 rounded-md border border-slate-200 dark:border-slate-800 text-xs">
-                        <button className="px-3 py-1 bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 shadow-xs font-semibold rounded-sm text-slate-700 dark:text-slate-350">LinkedIn</button>
-                        <button className="px-3 py-1 font-semibold text-slate-550 dark:text-slate-450">Email</button>
+                  <div className="p-5 pb-0 bg-white dark:bg-slate-900 border border-[#EBE9F1] dark:border-slate-800 rounded-md shadow-xs overflow-hidden">
+                    <div className="pb-5 flex justify-between items-center">
+                      <h3 className="text-base font-semibold text-[#444050] dark:text-slate-150">Campaign Overview</h3>
+                      <div className="flex bg-white dark:bg-slate-805 rounded-md border border-[#E2DFDF] dark:border-slate-800 text-xs">
+                        <button className="px-3 py-1 bg-[#F6F6F6] dark:bg-slate-900 font-semibold border-r border-[#E2DFDF] rounded-l-sm text-[#82868B] dark:text-slate-350">LinkedIn</button>
+                        <button className="px-3 py-1 font-semibold text-[#82868B] dark:text-slate-450">Email</button>
                       </div>
                     </div>
 
                     {/* Grid of metrics */}
-                    <div className="grid grid-cols-1 sm:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-[#E7EDF6] dark:divide-slate-800">
+                    <div className="grid grid-cols-1 sm:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-[#DBDBDB] dark:divide-slate-800">
                       {/* Stat 1: New Leads */}
-                      <div className="flex flex-col justify-between min-h-[160px] bg-white dark:bg-slate-900">
-                        <div className="p-5 space-y-2">
+                      <div className="flex flex-col justify-between min-h-[160px] bg-white dark:bg-slate-900 pe-5 border-l border-[#DBDBDB] dark:border-slate-800">
+                        <div className="p-3 space-y-1">
                           <div className="text-xs font-bold text-[#5E5873] dark:text-slate-400 uppercase tracking-wider">New Leads</div>
-                          <div className="text-2xl font-bold text-[#444050] dark:text-slate-100">1,628</div>
+                          <div className="text-lg font-semibold text-[#444050] dark:text-slate-100">1,628</div>
                         </div>
-                        <div className="h-20 bg-[#6F52ED] w-full rounded-b-none"></div>
+                        <div className="h-30 bg-[#6B62E3] w-full rounded-tr-lg"></div>
                       </div>
 
                       {/* Stat 2: Invites Sent */}
-                      <div className="flex flex-col justify-between min-h-[160px] bg-white dark:bg-slate-900">
-                        <div className="p-5 space-y-2">
-                          <div className="flex items-center justify-between gap-1">
-                            <span className="text-xs font-bold text-[#5E5873] dark:text-slate-400 uppercase tracking-wider text-[11px]">Invites Sent</span>
+                      <div className="flex flex-col justify-between min-h-[160px] bg-white pe-5 dark:bg-slate-900">
+                        <div className="p-3 space-y-1">
+                          <div className="flex items-center gap-1">
+                            <span className="font-bold text-[#5E5873] dark:text-slate-400 uppercase tracking-wider text-sm">Invites Sent</span>
                             <Info className="size-3.5 text-slate-400 cursor-pointer" />
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-2xl font-bold text-[#444050] dark:text-slate-100">988</span>
-                            <span className="bg-[#E8F9EE] text-[#28C76F] dark:bg-emerald-950/20 dark:text-emerald-450 text-[10px] font-bold px-1.5 py-0.5 rounded-sm">61%</span>
+                            <span className="text-lg font-semibold text-[#444050] dark:text-slate-100">988</span>
+                            <span className="bg-[#E5F8EE] text-[#549A75] dark:bg-emerald-950/20 dark:text-emerald-450 text-xs font-bold px-1.5 py-0.5 rounded-sm">61%</span>
                           </div>
                         </div>
-                        <div className="h-20 bg-slate-50 dark:bg-slate-850/20 w-full flex items-end">
-                          <div className="bg-[#8392A5] opacity-50 w-full" style={{ height: '61%' }}></div>
-                        </div>
+                        <div className="h-22 bg-[#9EB7CF] w-full rounded-tr-lg"></div>
                       </div>
 
                       {/* Stat 3: Invites Accepted */}
-                      <div className="flex flex-col justify-between min-h-[160px] bg-white dark:bg-slate-900">
-                        <div className="p-5 space-y-2">
-                          <div className="flex items-center justify-between gap-1">
-                            <span className="text-xs font-bold text-[#5E5873] dark:text-slate-400 uppercase tracking-wider text-[11px]">Invites Accepted</span>
+                      <div className="flex flex-col justify-between min-h-[160px] bg-white pe-5 dark:bg-slate-900">
+                        <div className="p-3 space-y-1">
+                          <div className="flex items-center gap-1">
+                            <span className="font-bold text-[#5E5873] dark:text-slate-400 uppercase tracking-wider text-xs">Invites Accepted</span>
                             <Info className="size-3.5 text-slate-400 cursor-pointer" />
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-2xl font-bold text-[#444050] dark:text-slate-100">507</span>
-                            <span className="bg-[#FFF3E8] text-[#FF9F43] dark:bg-amber-950/20 dark:text-amber-450 text-[10px] font-bold px-1.5 py-0.5 rounded-sm">49%</span>
+                            <span className="text-lg font-semibold text-[#444050] dark:text-slate-100">507</span>
+                            <span className="bg-[#FFF3DF] text-[#F4A226] dark:bg-amber-950/20 dark:text-amber-450 text-xs font-bold px-1.5 py-0.5 rounded-sm">49%</span>
                           </div>
                         </div>
-                        <div className="h-20 bg-slate-50 dark:bg-slate-850/20 w-full flex items-end">
-                          <div className="bg-[#20C997] opacity-25 w-full" style={{ height: '49%' }}></div>
-                        </div>
+                        <div className="h-16 bg-[#D5EFE7] w-full rounded-tr-lg"></div>
                       </div>
 
                       {/* Stat 4: Messages Sent */}
-                      <div className="flex flex-col justify-between min-h-[160px] bg-white dark:bg-slate-900">
-                        <div className="p-5 space-y-2">
-                          <div className="text-xs font-bold text-[#5E5873] dark:text-slate-400 uppercase tracking-wider text-[11px]">Messages Sent</div>
+                      <div className="flex flex-col justify-between min-h-[160px] bg-white pe-5 dark:bg-slate-900">
+                        <div className="p-3 space-y-1">
+                          <div className="flex items-center gap-1">
+                            <span className="font-bold text-[#5E5873] dark:text-slate-400 uppercase tracking-wider text-xs">Messages Sent</span>
+                            <Info className="size-3.5 text-slate-400 cursor-pointer" />
+                          </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-2xl font-bold text-[#444050] dark:text-slate-100">460</span>
-                            <span className="bg-[#E8F9EE] text-[#28C76F] dark:bg-emerald-950/20 dark:text-emerald-450 text-[10px] font-bold px-1.5 py-0.5 rounded-sm">91%</span>
+                            <span className="text-lg font-semibold text-[#444050] dark:text-slate-100">460</span>
+                            <span className="bg-[#E5F8EE] text-[#549A75] dark:bg-emerald-950/20 dark:text-emerald-450 text-xs font-bold px-1.5 py-0.5 rounded-sm">91%</span>
                           </div>
                         </div>
-                        <div className="h-20 bg-slate-50 dark:bg-slate-850/20 w-full flex items-end">
-                          <div className="bg-[#A5D6A7] opacity-60 w-full" style={{ height: '91%' }}></div>
-                        </div>
+                        <div className="h-27 bg-[#E9F9D2] w-full rounded-tr-lg"></div>
                       </div>
 
                       {/* Stat 5: Replies */}
                       <div className="flex flex-col justify-between min-h-[160px] bg-white dark:bg-slate-900">
-                        <div className="p-5 space-y-2">
-                          <div className="flex items-center justify-between gap-1">
-                            <span className="text-xs font-bold text-[#5E5873] dark:text-slate-400 uppercase tracking-wider text-[11px]">Replies</span>
+                        <div className="p-3 space-y-1">
+                          <div className="flex items-center gap-1">
+                            <span className="font-bold text-[#5E5873] dark:text-slate-400 uppercase tracking-wider text-xs">Replies</span>
                             <Info className="size-3.5 text-slate-400 cursor-pointer" />
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-2xl font-bold text-[#444050] dark:text-slate-100">202</span>
-                            <span className="bg-[#FFF3E8] text-[#FF9F43] dark:bg-amber-950/20 dark:text-amber-450 text-[10px] font-bold px-1.5 py-0.5 rounded-sm">44%</span>
+                            <span className="text-lg font-semibold text-[#444050] dark:text-slate-100">202</span>
+                            <span className="bg-[#FFF3DF] text-[#F4A226] dark:bg-amber-950/20 dark:text-amber-450 text-xs font-bold px-1.5 py-0.5 rounded-sm">44%</span>
                           </div>
                         </div>
-                        <div className="h-20 bg-slate-50 dark:bg-slate-850/20 w-full flex items-end">
-                          <div className="bg-[#81C784] opacity-35 w-full" style={{ height: '44%' }}></div>
-                        </div>
+                        <div className="bg-[#DEF5D9] w-full rounded-tr-lg" style={{ height: '44%' }}></div>
                       </div>
                     </div>
                   </div>
 
                   {/* Row with two sub-cards: Campaign Actions & Reply Performance */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Card 3: Campaign Actions */}
-                    <div className="bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-lg p-5 flex flex-col justify-between min-h-[300px] shadow-xs">
-                      <div className="space-y-4">
-                        <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-805 pb-3">
+                    <div className="bg-white dark:bg-slate-900 border border-[#EBE9F1] dark:border-slate-800 rounded-md flex flex-col justify-between min-h-[300px] shadow-xs col-span-2">
+                      <div className="space-y-4 p-5">
+                        <div className="flex justify-between items-center pb-3">
                           <div>
-                            <h3 className="text-base font-bold text-[#444050] dark:text-slate-150">Campaign Actions</h3>
-                            <p className="text-[11px] text-[#6E6B7B] dark:text-slate-450">Execution stats & engagement signals</p>
+                            <h3 className="text-base font-semibold text-[#444050] dark:text-slate-150">Campaign Actions</h3>
+                            <p className="text-xs text-[#9692A4] dark:text-slate-450 font-bold">Execution stats & engagement signals</p>
                           </div>
-                          <div className="flex bg-[#F8F8F8] dark:bg-slate-805 p-0.5 rounded-md border border-slate-200 dark:border-slate-800 text-[10px]">
-                            <button className="px-2 py-0.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs font-semibold rounded-sm text-slate-700 dark:text-slate-350">LinkedIn</button>
-                            <button className="px-2 py-0.5 font-semibold text-slate-550 dark:text-slate-450">Email</button>
+                          <div class="flex bg-white dark:bg-slate-805 rounded-md border border-[#E2DFDF] dark:border-slate-800 text-xs">
+                            <button class="px-3 py-1 bg-[#F6F6F6] dark:bg-slate-900 font-semibold border-r border-[#E2DFDF] rounded-l-sm text-[#82868B] dark:text-slate-350">LinkedIn</button>
+                            <button class="px-3 py-1 font-semibold text-[#82868B] dark:text-slate-450">Email</button>
                           </div>
                         </div>
 
                         {/* Layout grid of list metrics */}
                         <div className="grid grid-cols-2 gap-x-4 gap-y-3.5 text-xs">
                           {/* Column 1 */}
-                          <div className="space-y-3">
+                          <div className="space-y-3 text-base">
                             <div className="flex justify-between items-center">
-                              <span className="font-semibold text-slate-850 dark:text-slate-300">Remaining Leads:</span>
-                              <span className="font-bold text-[#444050] dark:text-slate-100">110</span>
+                              <span className="font-bold text-[#444050] dark:text-slate-300">Remaining Leads:</span>
+                              <span className="font-semibold text-[#444050] dark:text-slate-100">110</span>
                             </div>
                             <div className="flex justify-between items-center">
-                              <span className="font-semibold text-slate-855 dark:text-slate-300">Follow-up message:</span>
-                              <span className="font-bold text-[#444050] dark:text-slate-100">10</span>
+                              <span className="font-bold text-[#444050] dark:text-slate-300">Follow-up message:</span>
+                              <span className="font-semibold text-[#444050] dark:text-slate-100">10</span>
                             </div>
                             <div className="flex justify-between items-center">
-                              <span className="font-semibold text-slate-850 dark:text-slate-300">InMails Sent:</span>
-                              <span className="font-bold text-[#444050] dark:text-slate-100">20</span>
+                              <span className="font-bold text-[#444050] dark:text-slate-300">InMails Sent:</span>
+                              <span className="font-semibold text-[#444050] dark:text-slate-100">20</span>
                             </div>
                             <div className="flex justify-between items-center">
-                              <span className="font-semibold text-slate-850 dark:text-slate-300">Emails:</span>
-                              <span className="font-bold text-[#444050] dark:text-slate-100">89</span>
+                              <span className="font-bold text-[#444050] dark:text-slate-300">Emails:</span>
+                              <span className="font-semibold text-[#444050] dark:text-slate-100">89</span>
                             </div>
                           </div>
                           {/* Column 2 */}
-                          <div className="space-y-3">
+                          <div className="space-y-3 text-base">
                             <div className="flex justify-between items-center">
-                              <span className="font-semibold text-slate-850 dark:text-slate-300">Profile Viewed:</span>
-                              <span className="font-bold text-[#444050] dark:text-slate-100">45</span>
+                              <span className="font-bold text-[#444050] dark:text-slate-300">Profile Viewed:</span>
+                              <span className="font-semibold text-[#444050] dark:text-slate-100">45</span>
                             </div>
                             <div className="flex justify-between items-center">
-                              <span className="font-semibold text-slate-850 dark:text-slate-300">Profile Followed:</span>
-                              <span className="font-bold text-[#444050] dark:text-slate-100">140</span>
+                              <span className="font-bold text-[#444050] dark:text-slate-300">Profile Followed:</span>
+                              <span className="font-semibold text-[#444050] dark:text-slate-100">140</span>
                             </div>
                             <div className="flex justify-between items-center">
-                              <span className="font-semibold text-slate-850 dark:text-slate-300">Skills Endorsed:</span>
-                              <span className="font-bold text-[#444050] dark:text-slate-100">50</span>
+                              <span className="font-bold text-[#444050] dark:text-slate-300">Skills Endorsed:</span>
+                              <span className="font-semibold text-[#444050] dark:text-slate-100">50</span>
                             </div>
                             <div className="flex justify-between items-center">
-                              <span className="font-semibold text-slate-850 dark:text-slate-300">Comments Added:</span>
-                              <span className="font-bold text-[#444050] dark:text-slate-100">54</span>
+                              <span className="font-bold text-[#444050] dark:text-slate-300">Comments Added:</span>
+                              <span className="font-semibold text-[#444050] dark:text-slate-100">54</span>
                             </div>
                           </div>
                         </div>
                       </div>
 
                       {/* Team Avatars */}
-                      <div className="border-t border-slate-100 dark:border-slate-805 pt-4 flex items-center gap-3">
-                        <span className="text-xs font-bold text-slate-655 dark:text-slate-400">Team:</span>
+                      <div className="bg-[#EAEFFF] dark:bg-slate-805 p-4 flex items-center gap-3">
+                        <span className="text-base font-bold text-[#444050] dark:text-slate-100">Team:</span>
                         <div className="flex -space-x-2 overflow-hidden">
                           <img
                             className="inline-block size-6.5 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover"
@@ -1440,29 +1437,29 @@ export default function CampaignWorkflow({
                     </div>
 
                     {/* Card 4: Reply Performance */}
-                    <div className="bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-lg p-5 flex flex-col justify-between min-h-[300px] shadow-xs">
+                    <div className="bg-white dark:bg-slate-900 border border-[#EBE9F1] dark:border-slate-800 rounded-md p-5 flex flex-col justify-between min-h-[300px] shadow-xs">
                       <div className="space-y-4">
-                        <div className="border-b border-slate-100 dark:border-slate-805 pb-3">
-                          <h3 className="text-base font-bold text-[#444050] dark:text-slate-150">Reply Performance</h3>
-                          <p className="text-[11px] text-slate-450 dark:text-slate-400">Top reply channel</p>
+                        <div >
+                          <h3 className="text-base font-semibold text-[#444050] dark:text-slate-150">Reply Performance</h3>
+                          <p className="text-xs text-[#9692A4] dark:text-slate-450 font-bold">Top reply channel</p>
                         </div>
 
                         {/* Progress bars list */}
                         <div className="space-y-3.5">
                           {/* Channel 1: Follow-up */}
                           <div className="space-y-1">
-                            <div className="flex justify-between items-center text-xs font-semibold text-slate-700 dark:text-slate-350">
+                            <div className="flex justify-between items-center text-sm font-semibold text-slate-700 dark:text-slate-350">
                               <span>Follow-up</span>
-                              <span className="text-primary font-bold">80%</span>
+                              <span className="text-[#6789F8] font-bold">80%</span>
                             </div>
                             <div className="w-full bg-[#EAEFFF] dark:bg-slate-850 h-2 rounded-full overflow-hidden">
-                              <div className="bg-primary h-full rounded-full" style={{ width: '80%' }}></div>
+                              <div className="bg-[#6789F8] h-full rounded-full" style={{ width: '80%' }}></div>
                             </div>
                           </div>
 
                           {/* Channel 2: InMail */}
                           <div className="space-y-1">
-                            <div className="flex justify-between items-center text-xs font-semibold text-slate-700 dark:text-slate-350">
+                            <div className="flex justify-between items-center text-sm font-semibold text-slate-700 dark:text-slate-350">
                               <span>InMail</span>
                               <span className="text-[#00C875] font-bold">32%</span>
                             </div>
@@ -1473,7 +1470,7 @@ export default function CampaignWorkflow({
 
                           {/* Channel 3: Email */}
                           <div className="space-y-1">
-                            <div className="flex justify-between items-center text-xs font-semibold text-slate-700 dark:text-slate-350">
+                            <div className="flex justify-between items-center text-sm font-semibold text-slate-700 dark:text-slate-350">
                               <span>Email</span>
                               <span className="text-rose-500 font-bold">11%</span>
                             </div>
@@ -1484,12 +1481,12 @@ export default function CampaignWorkflow({
 
                           {/* Channel 4: Connection Message */}
                           <div className="space-y-1">
-                            <div className="flex justify-between items-center text-xs font-semibold text-slate-700 dark:text-slate-350">
+                            <div className="flex justify-between items-center text-sm font-semibold text-slate-700 dark:text-slate-350">
                               <span>Connection Message</span>
-                              <span className="text-primary font-bold">79%</span>
+                              <span className="text-[#6789F8] font-bold">79%</span>
                             </div>
                             <div className="w-full bg-[#EAEFFF] dark:bg-slate-850 h-2 rounded-full overflow-hidden">
-                              <div className="bg-primary h-full rounded-full" style={{ width: '79%' }}></div>
+                              <div className="bg-[#6789F8] h-full rounded-full" style={{ width: '79%' }}></div>
                             </div>
                           </div>
                         </div>
@@ -1503,50 +1500,37 @@ export default function CampaignWorkflow({
                 <div className="space-y-6">
 
                   {/* Card 5: Reply Analysis */}
-                  <div className="bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-lg p-5 shadow-xs">
-                    <h3 className="text-base font-bold text-[#444050] dark:text-slate-150 border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">Reply Analysis</h3>
+                  <div className="bg-white dark:bg-slate-900 border border-[#EBE9F1] dark:border-slate-800 rounded-md p-5">
+                    <h3 className="text-base font-semibold text-[#444050] dark:text-slate-150 mb-4">Reply Analysis</h3>
 
                     {/* Gauge Visualization */}
                     <div className="flex flex-col items-center justify-center py-2">
-                      <div className="relative size-32 flex items-center justify-center">
-                        {/* Semicircular ticks chart */}
-                        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                          {/* Background arc */}
-                          <circle cx="50" cy="50" r="40" stroke="#E2E8F0" strokeWidth="6" fill="none" strokeDasharray="126 251" strokeLinecap="round" className="dark:stroke-slate-800" />
-                          {/* Filled blue arc representing 80% */}
-                          <circle cx="50" cy="50" r="40" stroke="#3666EE" strokeWidth="6" fill="none" strokeDasharray="101 251" strokeLinecap="round" />
-                        </svg>
-                        {/* Inner Text overlay */}
-                        <div className="absolute flex flex-col items-center justify-center">
-                          <span className="text-xl font-bold text-[#444050] dark:text-slate-100">80%</span>
-                          <span className="text-[9px] font-semibold text-slate-500 dark:text-slate-400">Discussions</span>
-                        </div>
-                      </div>
+                      <SemiCircularProgress value={80} />
 
                       {/* Results Table list */}
-                      <div className="w-full mt-4 border-t border-slate-100 dark:border-slate-800 pt-3 text-xs font-semibold">
-                        <div className="flex justify-between items-center text-slate-655 dark:text-slate-400 mb-2">
+                      <div className="w-full mt-5 border-t border-[#EBE9F1] dark:border-slate-800 pt-5 text-sm font-semibold">
+                        <div className="flex justify-between items-center text-[#444050] dark:text-slate-400 mb-2">
                           <span>Status</span>
                           <span>Results</span>
                         </div>
                         <div className="space-y-2">
                           <div className="flex justify-between items-center">
-                            <span className="inline-flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
-                              <span className="size-2 rounded-full bg-primary"></span> Positive
+                            <span className="inline-flex items-center gap-1.5 text-[#5E5873] dark:text-slate-300">
+                              <span className="size-2 rounded-full bg-[#7255DE]"></span> Positive
                             </span>
-                            <span className="font-bold text-[#444050] dark:text-slate-150">12%</span>
+                            <span className="font-bold text-[#5E5873] dark:text-slate-150">12%</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="inline-flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
-                              <span className="size-2 rounded-full bg-[#FF9F43]"></span> Neutral
+                            <span className="inline-flex items-center gap-1.5 text-[#5E5873] dark:text-slate-300">
+                              <span className="size-2 rounded-full bg-[#F4A226]"></span> Neutral
                             </span>
-                            <span className="font-bold text-[#444050] dark:text-slate-150">14%</span>
+                            <span className="font-bold text-[#5E5873] dark:text-slate-150">14%</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="inline-flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
-                              <span className="size-2 rounded-full bg-rose-500"></span> Negative
+                            <span className="inline-flex items-center gap-1.5 text-[#5E5873] dark:text-slate-300">
+                              <span className="size-2 rounded-full bg-[#EA5455]"></span> Negative
                             </span>
-                            <span className="font-bold text-[#444050] dark:text-slate-150">8%</span>
+                            <span className="font-bold text-[#5E5873] dark:text-slate-150">8%</span>
                           </div>
                         </div>
                       </div>
@@ -1554,84 +1538,93 @@ export default function CampaignWorkflow({
                   </div>
 
                   {/* Card 6: Recent Campaign Activity */}
-                  <div className="bg-white dark:bg-slate-900 border border-[#E7EDF6] dark:border-slate-800 rounded-lg p-5 flex flex-col justify-between min-h-[420px] shadow-xs">
+                  <div className="bg-white dark:bg-slate-900 border border-[#EBE9F1] dark:border-slate-800 rounded-md p-5 flex flex-col justify-between min-h-[420px]">
                     <div className="space-y-4">
-                      <h3 className="text-base font-bold text-[#444050] dark:text-slate-150 border-b border-slate-100 dark:border-slate-800 pb-3">Recent Campaign Activity</h3>
+                      <h3 className="text-base font-semibold text-[#444050] dark:text-slate-150 mb-4">Recent Campaign Activity</h3>
 
                       {/* Activity List Timeline */}
-                      <div className="relative pl-6 space-y-6">
+                      <div className="relative pl-10 space-y-6">
                         {/* Timeline Line */}
-                        <div className="absolute left-[11px] top-2.5 bottom-2.5 w-0.5 bg-[#EAEFFF] dark:bg-slate-800"></div>
+                        <div className="absolute left-[11px] top-2.5 bottom-2.5 w-0.5 bg-[#BDBDBD] dark:bg-slate-800"></div>
 
                         {/* Item 1: Campaign Started */}
                         <div className="relative">
-                          <span className="absolute -left-6 top-0.5 size-6.5 rounded-full bg-primary text-white flex items-center justify-center">
+                          <span className="absolute -left-10 top-0.5 size-6.5 rounded-full bg-primary text-white flex items-center justify-center">
                             <Rocket className="size-3" />
                           </span>
-                          <div className="flex flex-col text-xs">
-                            <span className="text-slate-400 font-semibold">09:14 AM</span>
-                            <span className="font-bold text-[#444050] dark:text-slate-200 mt-0.5">Campaign started</span>
-                            <span className="text-slate-500 dark:text-slate-400 font-normal">by <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline">Aman S.</a></span>
+                          <div className="flex flex-col text-sm">
+                            <span className="text-[#5E5873] font-bold text-xs">09:14 AM</span>
+                            <span className="font-semibold text-[#444050] dark:text-slate-200 mt-0.5">Campaign started</span>
+                            <span className="text-[#5E5873] dark:text-slate-400 font-bold text-xs">by <a href="#" onClick={(e) => e.preventDefault()} className="hover:no-underline underline font-semibold">Aman S.</a></span>
                           </div>
                         </div>
 
                         {/* Item 2: Reply Received */}
                         <div className="relative">
-                          <span className="absolute -left-6 top-0.5 size-6.5 rounded-full bg-indigo-550 bg-indigo-500 text-white flex items-center justify-center">
+                          <span className="absolute -left-10 top-0.5 size-6.5 rounded-full bg-indigo-550 bg-indigo-500 text-white flex items-center justify-center">
                             <MessageSquare className="size-3" />
                           </span>
-                          <div className="flex flex-col text-xs">
-                            <span className="text-slate-400 font-semibold">10:30 AM</span>
-                            <span className="font-bold text-[#444050] dark:text-slate-200 mt-0.5">Reply received</span>
-                            <span className="text-slate-500 dark:text-slate-400 font-normal">from <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline">Suresh K.</a></span>
+                          <div className="flex flex-col text-sm">
+                            <span className="text-[#5E5873] font-bold text-xs">10:30 AM</span>
+                            <span className="font-semibold text-[#444050] dark:text-slate-200 mt-0.5">Reply received</span>
+                            <span className="text-[#5E5873] dark:text-slate-400 font-bold text-xs">from <a href="#" onClick={(e) => e.preventDefault()} className="hover:no-underline underline font-semibold">Suresh K.</a></span>
                           </div>
                         </div>
 
                         {/* Item 3: Follow-up message sent */}
                         <div className="relative">
-                          <span className="absolute -left-6 top-0.5 size-6.5 rounded-full bg-rose-500 text-white flex items-center justify-center">
+                          <span className="absolute -left-10 top-0.5 size-6.5 rounded-full bg-rose-500 text-white flex items-center justify-center">
                             <Send className="size-3" />
                           </span>
-                          <div className="flex flex-col text-xs">
-                            <span className="text-slate-400 font-semibold">10:35 AM</span>
-                            <span className="font-bold text-[#444050] dark:text-slate-200 mt-0.5">Follow-up message sent</span>
-                            <span className="text-slate-500 dark:text-slate-400 font-normal">by System</span>
+                          <div className="flex flex-col text-sm">
+                            <span className="text-[#5E5873] font-bold text-xs">10:35 AM</span>
+                            <span className="font-semibold text-[#444050] dark:text-slate-200 mt-0.5">Follow-up message sent</span>
+                            <span className="text-[#5E5873] dark:text-slate-400 font-bold text-xs">by <span className='font-semibold'>System</span></span>
                           </div>
                         </div>
 
                         {/* Item 4: Connection Accepted */}
                         <div className="relative">
-                          <span className="absolute -left-6 top-0.5 size-6.5 rounded-full bg-[#EAEFFF] text-primary flex items-center justify-center border border-primary/20">
-                            <UserCheck className="size-3" />
+                          <span className="absolute -left-7 top-0.5 size-6.5">
+                            <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M0.5 0V4.20654C0.5 13.0431 7.66344 20.2065 16.5 20.2065H19.0117" stroke="#BDBDBD"/>
+                            </svg>
                           </span>
-                          <div className="flex flex-col text-xs">
-                            <span className="text-slate-400 font-semibold">10:35 AM</span>
-                            <span className="font-bold text-[#444050] dark:text-slate-200 mt-0.5">Connection accepted</span>
-                            <span className="text-slate-500 dark:text-slate-400 font-normal">by <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline">Suresh K.</a> (Prospect)</span>
+                          <div className="flex flex-col text-sm">
+                            <span className="text-[#5E5873] font-bold text-xs">10:35 AM</span>
+                            <span className="font-semibold text-[#444050] dark:text-slate-200 mt-0.5">Connection accepted</span>
+                            <span className="text-[#5E5873] dark:text-slate-400 font-bold text-xs">by <a href="#" onClick={(e) => e.preventDefault()} className="hover:no-underline underline font-semibold">Suresh K.</a> (Prospect)</span>
                           </div>
                         </div>
 
                         {/* Item 5: Campaign Paused */}
                         <div className="relative">
-                          <span className="absolute -left-6 top-0.5 size-6.5 rounded-full bg-amber-505 bg-amber-550 bg-amber-500 text-white flex items-center justify-center">
+                          <span className="absolute -left-10 top-0.5 size-6.5 rounded-full bg-amber-505 bg-amber-550 bg-amber-500 text-white flex items-center justify-center">
                             <Pause className="size-3" />
                           </span>
-                          <div className="flex flex-col text-xs">
-                            <span className="text-slate-400 font-semibold">10:45 AM</span>
-                            <span className="font-bold text-[#444050] dark:text-slate-200 mt-0.5">Campaign paused</span>
-                            <span className="text-slate-500 dark:text-slate-400 font-normal">by <a href="#" onClick={(e) => e.preventDefault()} className="text-primary underline">Aman S.</a></span>
+                          <div className="flex flex-col text-sm">
+                            <span className="text-[#5E5873] font-bold text-xs">10:45 AM</span>
+                            <span className="font-semibold text-[#444050] dark:text-slate-200 mt-0.5">Campaign paused</span>
+                            <span className="text-[#5E5873] dark:text-slate-400 font-bold text-xs">by <a href="#" onClick={(e) => e.preventDefault()} className="hover:no-underline underline font-semibold">Aman S.</a></span>
                           </div>
+                        </div>
+
+                        <div className="relative">
+                          <span className="absolute -top-3 -left-7 size-6.5">
+                            <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M0.5 0V4.20654C0.5 13.0431 7.66344 20.2065 16.5 20.2065H19.0117" stroke="#BDBDBD"/>
+                            </svg>
+                          </span>
+                          <a href="#" onClick={(e) => e.preventDefault()} className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-brand-blue-hover transition-colors">
+                            <ExternalLink className="size-3.5" />
+                            Open Activity Log
+                          </a>
                         </div>
 
                       </div>
                     </div>
 
-                    <div className="border-t border-slate-100 dark:border-slate-800 pt-4 mt-6">
-                      <a href="#" onClick={(e) => e.preventDefault()} className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-brand-blue-hover transition-colors">
-                        <ExternalLink className="size-3.5" />
-                        Open Activity Log
-                      </a>
-                    </div>
+                    
                   </div>
 
                 </div>
@@ -1667,13 +1660,13 @@ export default function CampaignWorkflow({
         {currentStep !== 4 && (
           <>
             {!isLaunched && (
-              <div className={`flex items-center gap-4 mt-10 ${currentStep === 3 ? 'justify-between' : 'justify-end'}`}>
+              <div className={`flex flex-wrap items-center gap-4 mt-10 ${currentStep === 3 ? 'justify-between' : 'justify-end'}`}>
                 {currentStep === 3 ?
                   <div className='text-sm text-slate-600 dark:text-slate-300'>
                     <p>If a lead answers your invite, message, or InMail, we<br />stop sending further steps automatically. <a className='text-primary' href="#">Learn more</a></p>
                   </div>
                   : null}
-                <div className='flex items-center justify-end gap-4'>
+                <div className='flex flex-grow-1 items-center justify-end gap-4'>
                   {currentStep === 1 ? '' : <button
                     type="button"
                     onClick={handleBackStep}
@@ -1695,11 +1688,6 @@ export default function CampaignWorkflow({
             )}
           </>
         )}
-
-
-
-
-
       </div>
     </div>
   );
