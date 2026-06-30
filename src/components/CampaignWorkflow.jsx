@@ -341,7 +341,8 @@ export default function CampaignWorkflow({
 
         {/* STEP 1: DEFINE TARGET AUDIENCE */}
         {currentStep === 1 && (
-          <div className="relative pl-8 space-y-6">
+          <div className='h-[calc(100vh-366px)]'>
+          <div className="relative pl-8 space-y-6 ">
             {/* Timeline Line */}
             <div className="absolute left-[9px] top-2 bottom-2 w-0.5 bg-[#EAEFFF] dark:bg-slate-850"></div>
 
@@ -603,11 +604,12 @@ export default function CampaignWorkflow({
 
             </div>
           </div>
+          </div>
         )}
 
         {/* STEP 2: SENDER PROFILES */}
         {currentStep === 2 && (
-          <div className="space-y-6">
+          <div className="space-y-6 min-h-[calc(100vh-366px)]">
             {/* Tabs */}
             <div className="flex items-center">
               <button
@@ -878,7 +880,7 @@ export default function CampaignWorkflow({
 
         {/* STEP 3: SETTINGS */}
         {currentStep === 3 && (
-          <div className="space-y-6 animate-fade-in">
+          <div className="space-y-6 animate-fade-in min-h-[calc(100vh-366px)]">
             <div class="flex flex-col gap-5 border border-[#EBE9F1] p-5">
               {/* Campaign Name */}
               <div className="space-y-1.5">
