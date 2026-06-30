@@ -25,7 +25,7 @@ function CrmCell({ crm, crmTime }) {
   return (
     <div className="flex flex-col gap-0.5">
       <div className='flex'>
-        {isSynced ? <span className="flex items-center gap-1.5 text-[#5E5873] font-semibold"><img src={crmImage} alt={crm} className='size-4'/> {crm}</span> : <span className='text-[#6E6B7B] border border-[#E7EDF6] rounded-sm py-1 px-1.5'>Sync to CRM</span>}
+        {isSynced ? <span className="flex items-center gap-1.5 text-[#5E5873] font-semibold"><img src={crmImage} alt={crm} className='size-4'/> {crm}</span> : <span className='text-[#6E6B7B] border border-[#E7EDF6] rounded-sm py-1 px-1.5 whitespace-nowrap'>Sync to CRM</span>}
         <span className={`text-sm font-semibold ${isSynced ? 'text-slate-800' : 'text-slate-600'}`}></span>
       </div>
       {isSynced && <div className='text-[#6D6B77] text-xs font-normal'>{crmTime}</div>}
@@ -90,7 +90,7 @@ export default function CampaignTable({ onCreateCampaign }) {
   return (
     <div className="">
       {/* ── Top Header Bar ── */}
-      <div className="flex items-start justify-between mb-5">
+      <div className="flex flex-wrap gap-3 items-start justify-between mb-5">
         <div>
           <h2 className="text-lg font-semibold text-[#444050] dark:text-slate-400 leading-tight">All Campaigns List</h2>
           <p className="text-xs text-slate-700 dark:text-slate-500 mt-0.5">A quick look at all of your outreach initiatives.</p>
