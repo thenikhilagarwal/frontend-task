@@ -53,9 +53,9 @@ export default function App() {
   }, [theme]);
 
   // Sync campaigns with localStorage
-  useEffect(() => {
-    localStorage.setItem('campaigns', JSON.stringify(campaigns));
-  }, [campaigns]);
+  // useEffect(() => {
+  //   localStorage.setItem('campaigns', JSON.stringify(campaigns));
+  // }, [campaigns]);
 
   // Handlers
   const handleSaveCampaign = (newCampaign, redirect = true) => {
@@ -90,7 +90,7 @@ export default function App() {
   });
 
   return (
-    <div className="min-h-screen bg-[#F8F8F8] dark:bg-slate-950 flex flex-row transition-colors duration-200">
+    <div className="activeSidebar min-h-screen bg-[#F8F8F8] dark:bg-slate-950 flex flex-row transition-colors duration-200">
       {/* Sidebar navigation */}
       <Sidebar
         theme={theme}
